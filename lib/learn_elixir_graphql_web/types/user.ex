@@ -3,6 +3,7 @@ defmodule LearnElixirGraphqlWeb.Types.User do
 
   @desc "User preferences (queries)"
   object :preferences do
+    field(:user_id, :integer)
     field(:likes_emails, :boolean)
     field(:likes_phone_calls, :boolean)
   end

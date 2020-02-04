@@ -16,9 +16,11 @@ defmodule LearnElixirGraphqlWeb.Schema do
   subscription do
     field :updated_user_preferences, :preferences do
       arg(:user_id, :id)
-      # config(fn _, _ -> {:ok, topic: "users"} end)
-      trigger(:update_user_preferences, topic: fn _ -> "users" end)
-      # resolve(fn preferences, _, _ -> {:ok, preferences} end)
+      config(fn args, _ -> {:ok, topic: "users:#{args.user_id}"} end)
+
+      trigger(:update_user_preferences, topic: fn preference -> "users:#{preference.user_id}" end)
+
+      resolve(fn preferences, _, _ -> {:ok, preferences} end)
     end
   end
 end

@@ -93,7 +93,12 @@ defmodule LearnElixirGraphql.User do
 
   def update_preferences(%{user_id: user_id} = params) do
     with {:ok, user} <- find(user_id) do
-      {:ok, Map.merge(user.preferences, params)}
+      preferences =
+        user.preferences
+        |> Map.merge(params)
+        |> Map.put(:user_id, user.id)
+
+      {:ok, preferences}
     end
   end
 

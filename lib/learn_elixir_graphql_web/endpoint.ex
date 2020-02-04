@@ -2,7 +2,7 @@ defmodule LearnElixirGraphqlWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :learn_elixir_graphql
   use Absinthe.Phoenix.Endpoint
 
-  socket "graphiql/websocket", LearnElixirGraphqlWeb.UserSocket,
+  socket "/websocket", LearnElixirGraphqlWeb.UserSocket,
     websocket: true,
     longpoll: false
 
