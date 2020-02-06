@@ -38,11 +38,8 @@ defmodule LearnElixirGraphql.User do
     }
   ]
 
-  def where(%{likes_emails: emails, likes_phone_calls: calls} = params) do
-    users =
-      @users
-      |> Enum.filter(fn user -> has_preference?(:emails, user, emails) end)
-      |> Enum.filter(fn user -> has_preference?(:calls, user, calls) end)
+  def all(params \\ []) do
+    users = Enum.reduce(params, @users, &by_params/2)
 
     case users do
       [] ->
@@ -53,31 +50,9 @@ defmodule LearnElixirGraphql.User do
     end
   end
 
-  def where(%{likes_phone_calls: calls} = params) do
-    users = Enum.filter(@users, fn user -> has_preference?(:calls, user, calls) end)
-
-    case users do
-      [] ->
-        {:error, %{message: "not found", details: params}}
-
-      users ->
-        {:ok, users}
-    end
+  defp by_params({field, value}, users) do
+    Enum.filter(users, fn user -> get_in(user, [:preferences, field]) === value end)
   end
-
-  def where(%{likes_emails: emails} = params) do
-    users = Enum.filter(@users, fn user -> has_preference?(:emails, user, emails) end)
-
-    case users do
-      [] ->
-        {:error, %{message: "not found", details: params}}
-
-      users ->
-        {:ok, users}
-    end
-  end
-
-  def where(_), do: {:ok, @users}
 
   def find(id) do
     id = String.to_integer(id)

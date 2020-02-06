@@ -6,7 +6,7 @@ defmodule LearnElixirGraphqlWeb.Queries.User do
     field :users, list_of(:user) do
       arg :likes_emails, :boolean
       arg :likes_phone_calls, :boolean
-      resolve &Resolvers.User.where/2
+      resolve &Resolvers.User.all/2
     end
 
     field :user, :user do

@@ -2,8 +2,8 @@ defmodule LearnElixirGraphqlWeb.Resolvers.User do
   use Absinthe.Schema.Notation
   alias LearnElixirGraphql.User
 
-  def where(params, _) do
-    User.where(params)
+  def all(params, _) do
+    User.all(params)
   end
 
   def find(%{id: id}, _) do
