@@ -39,9 +39,12 @@ defmodule LearnElixirGraphql.User do
   ]
 
   def where(%{likes_emails: emails, likes_phone_calls: calls} = params) do
-    case(
-      Enum.filter(@users, fn user -> emails?(user) === emails && calls?(user) === calls end)
-    ) do
+    users =
+      @users
+      |> Enum.filter(fn user -> has_preference?(:emails, user, emails) end)
+      |> Enum.filter(fn user -> has_preference?(:calls, user, calls) end)
+
+    case users do
       [] ->
         {:error, %{message: "not found", details: params}}
 
@@ -51,7 +54,9 @@ defmodule LearnElixirGraphql.User do
   end
 
   def where(%{likes_phone_calls: calls} = params) do
-    case(Enum.filter(@users, fn user -> calls?(user) === calls end)) do
+    users = Enum.filter(@users, fn user -> has_preference?(:calls, user, calls) end)
+
+    case users do
       [] ->
         {:error, %{message: "not found", details: params}}
 
@@ -61,7 +66,9 @@ defmodule LearnElixirGraphql.User do
   end
 
   def where(%{likes_emails: emails} = params) do
-    case(Enum.filter(@users, fn user -> emails?(user) === emails end)) do
+    users = Enum.filter(@users, fn user -> has_preference?(:emails, user, emails) end)
+
+    case users do
       [] ->
         {:error, %{message: "not found", details: params}}
 
@@ -102,11 +109,13 @@ defmodule LearnElixirGraphql.User do
     end
   end
 
-  defp emails?(user) do
-    get_in(user, [:preferences, :likes_emails])
-  end
+  defp has_preference?(method, user, value) do
+    accessor =
+      case method do
+        :emails -> :likes_emails
+        :calls -> :likes_phone_calls
+      end
 
-  defp calls?(user) do
-    get_in(user, [:preferences, :likes_phone_calls])
+    get_in(user, [:preferences, accessor]) === value
   end
 end
