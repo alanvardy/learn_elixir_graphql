@@ -7,12 +7,25 @@
 # General application configuration
 use Mix.Config
 
+config :learn_elixir_graphql, LearnElixirGraphql.Repo,
+  database: "learn_elixir_graphql_repo",
+  username: "postgres",
+  password: "pass",
+  hostname: "localhost"
+
 # Configures the endpoint
 config :learn_elixir_graphql, LearnElixirGraphqlWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "ykF4evjNQvlluKda+Bn/JR8AcXn1zpFdbOnAhsFhoIb38A1Kp8L/mlPZEWJdQexF",
   render_errors: [view: LearnElixirGraphqlWeb.ErrorView, accepts: ~w(json)],
   pubsub: [name: LearnElixirGraphql.PubSub, adapter: Phoenix.PubSub.PG2]
+
+config :learn_elixir_graphql,
+  ecto_repos: [LearnElixirGraphql.Repo]
+
+config :ecto_shorts,
+  repo: LearnElixirGraphql.Repo,
+  error_module: EctoShorts.Actions.Error
 
 # Configures Elixir's Logger
 config :logger, :console,

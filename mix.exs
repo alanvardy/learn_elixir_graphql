@@ -9,6 +9,7 @@ defmodule LearnElixirGraphql.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
+      dialyzer: dialyzer(),
       deps: deps()
     ]
   end
@@ -20,6 +21,13 @@ defmodule LearnElixirGraphql.MixProject do
     [
       mod: {LearnElixirGraphql.Application, []},
       extra_applications: [:logger, :runtime_tools]
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_add_deps: :transitive,
+      ignore_warnings: ".dialyzer_ignore.exs"
     ]
   end
 
@@ -39,7 +47,14 @@ defmodule LearnElixirGraphql.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:absinthe, "~> 1.4.0"},
       {:absinthe_plug, "~> 1.4"},
-      {:absinthe_phoenix, "~> 1.4.0"}
+      {:absinthe_phoenix, "~> 1.4.0"},
+      {:ecto_sql, "~> 3.0"},
+      {:postgrex, "~> 0.15"},
+      {:dataloader, "~> 1.0"},
+      {:ecto_shorts, "~> 0.1.0"},
+      {:ex_check, ">= 0.0.0", only: :dev, runtime: false},
+      {:credo, "~> 1.2.1", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev, :test], runtime: false}
     ]
   end
 end

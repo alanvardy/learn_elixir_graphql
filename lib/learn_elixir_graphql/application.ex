@@ -5,12 +5,14 @@ defmodule LearnElixirGraphql.Application do
 
   use Application
 
+  @spec start(any, any) :: {:error, any} | {:ok, pid}
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
       LearnElixirGraphqlWeb.Endpoint,
-      {Absinthe.Subscription, [LearnElixirGraphqlWeb.Endpoint]}
+      {Absinthe.Subscription, [LearnElixirGraphqlWeb.Endpoint]},
+      {LearnElixirGraphql.Repo, []}
       # Starts a worker by calling: LearnElixirGraphql.Worker.start_link(arg)
       # {LearnElixirGraphql.Worker, arg},
     ]
@@ -23,6 +25,7 @@ defmodule LearnElixirGraphql.Application do
 
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
+  @spec config_change(any, any, any) :: :ok
   def config_change(changed, _new, removed) do
     LearnElixirGraphqlWeb.Endpoint.config_change(changed, removed)
     :ok
