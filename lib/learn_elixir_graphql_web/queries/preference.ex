@@ -7,6 +7,10 @@ defmodule LearnElixirGraphqlWeb.Queries.Preference do
     field :preferences, list_of(:preference) do
       arg :likes_emails, :boolean
       arg :likes_phone_calls, :boolean
+      # Ecto Shorts
+      arg :before, :integer
+      arg :after, :integer
+      arg :first, :integer
       resolve &Resolvers.Preference.all/2
     end
 

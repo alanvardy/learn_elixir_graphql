@@ -7,6 +7,10 @@ defmodule LearnElixirGraphqlWeb.Queries.User do
     field :users, list_of(:user) do
       arg :name, :string
       arg :email, :string
+      # Ecto Shorts
+      arg :before, :integer
+      arg :after, :integer
+      arg :first, :integer
       resolve &Resolvers.User.all/2
     end
 
