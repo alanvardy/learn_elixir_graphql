@@ -11,10 +11,8 @@ defmodule LearnElixirGraphqlWeb.Resolvers.Preference do
   def all(params, _) do
     # I wasnt able to make dialyzer accept the module as the first argument,
     # Actions.all(User, params) fails for me
-    case Actions.all(from(p in Preference, preload: [:user]), params) do
-      result when is_list(result) -> {:ok, result}
-      other -> {:error, "An error occured: #{inspect(other)}"}
-    end
+    result = Actions.all(from(p in Preference, preload: [:user]), params)
+    {:ok, result}
   end
 
   @spec find(params, any) :: {:error, binary} | {:ok, Preference.t()}
