@@ -13,7 +13,7 @@ defmodule LearnElixirGraphqlWeb.Types.Preference do
   end
 
   @desc "User preference (mutation)"
-  input_object :input_preference do
+  input_object :preference_input do
     field :likes_emails, :boolean
     field :likes_phone_calls, :boolean
   end

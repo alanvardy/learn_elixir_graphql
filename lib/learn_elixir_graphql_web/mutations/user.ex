@@ -7,7 +7,7 @@ defmodule LearnElixirGraphqlWeb.Mutations.User do
     field :create_user, :user do
       arg :name, :string
       arg :email, :string
-      arg :preference, :input_preference
+      arg :preference, :preference_input
 
       resolve &Resolvers.User.create/2
     end
