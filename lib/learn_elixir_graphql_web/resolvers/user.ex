@@ -1,36 +1,20 @@
 defmodule LearnElixirGraphqlWeb.Resolvers.User do
   @moduledoc "User resolvers for Absinthe"
   use Absinthe.Schema.Notation
-  alias EctoShorts.Actions
   alias LearnElixirGraphql.Accounts.User
-  import Ecto.Query
 
   @type params :: keyword | map
 
   @spec all(params, any) :: {:ok, [User.t()]} | {:error, binary}
-  def all(params, _) do
-    # I wasnt able to make dialyzer accept the module as the first argument,
-    # Actions.all(User, params) fails for me
-    result = Actions.all(from(u in User, preload: [:preference]), params)
-    {:ok, result}
-  end
+  def all(params, _), do: User.all(params)
 
   @spec find(params, any) :: {:error, binary} | {:ok, User.t()}
-  def find(params, _) do
-    from(u in User) |> Actions.find(params)
-  end
+  def find(params, _), do: User.find(params)
 
   @spec create(params, any) :: {:error, Ecto.Changeset.t()} | {:ok, User.t()}
-  def create(params, _) do
-    Actions.create(User, params)
-  end
+  def create(params, _), do: User.create(params)
 
-  @spec update(%{id: binary}, any) :: {:error, Ecto.Changeset.t()} | {:ok, User.t()}
+  @spec update(params, any) :: {:error, Ecto.Changeset.t()} | {:ok, User.t()}
   # dialyzer can't emotionally handle me using Actions.update(User, id, params)
-  def update(%{id: id} = params, _) do
-    with {:ok, user} <- find(%{id: String.to_integer(id)}, "nothing") do
-      params = Map.delete(params, :id)
-      Actions.update(User, user, params)
-    end
-  end
+  def update(params, _), do: User.update(params)
 end

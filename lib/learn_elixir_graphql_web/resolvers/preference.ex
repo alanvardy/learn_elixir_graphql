@@ -1,31 +1,16 @@
 defmodule LearnElixirGraphqlWeb.Resolvers.Preference do
   @moduledoc "User resolvers for Absinthe"
   use Absinthe.Schema.Notation
-  alias EctoShorts.Actions
   alias LearnElixirGraphql.Accounts.Preference
-  import Ecto.Query
 
   @type params :: keyword | map
 
   @spec all(params, any) :: {:ok, [Preference.t()]} | {:error, binary}
-  def all(params, _) do
-    # I wasnt able to make dialyzer accept the module as the first argument,
-    # Actions.all(User, params) fails for me
-    result = Actions.all(from(p in Preference, preload: [:user]), params)
-    {:ok, result}
-  end
+  def all(params, _), do: Preference.all(params)
 
   @spec find(params, any) :: {:error, binary} | {:ok, Preference.t()}
-  def find(params, _) do
-    from(p in Preference) |> Actions.find(params)
-  end
+  def find(params, _), do: Preference.find(params)
 
-  @spec update(%{id: binary}, any) :: {:error, Ecto.Changeset.t()} | {:ok, Preference.t()}
-  # dialyzer can't emotionally handle me using Actions.update(User, id, params)
-  def update(%{id: id} = params, other) do
-    with {:ok, preference} <- find(%{id: String.to_integer(id)}, other) do
-      params = Map.delete(params, :id)
-      Actions.update(Preference, preference, params)
-    end
-  end
+  @spec update(params, any) :: {:error, Ecto.Changeset.t()} | {:ok, Preference.t()}
+  def update(params, _), do: Preference.update(params)
 end
