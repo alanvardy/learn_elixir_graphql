@@ -10,6 +10,7 @@ defmodule LearnElixirGraphqlWeb.Schema do
   import_types(LearnElixirGraphqlWeb.Queries.Metric)
   import_types(LearnElixirGraphqlWeb.Mutations.User)
   import_types(LearnElixirGraphqlWeb.Mutations.Preference)
+  import_types(LearnElixirGraphqlWeb.Subscriptions.Preference)
 
   query do
     import_fields :user_queries
@@ -23,14 +24,7 @@ defmodule LearnElixirGraphqlWeb.Schema do
   end
 
   subscription do
-    field :updated_user_preferences, :preference do
-      arg :user_id, :id
-      config fn args, _ -> {:ok, topic: "users:#{args.user_id}"} end
-
-      trigger :update_user_preferences, topic: fn preference -> "users:#{preference.user_id}" end
-
-      resolve fn preference, _, _ -> {:ok, preference} end
-    end
+    import_fields :preference_subscriptions
   end
 
   @spec context(map) :: map
