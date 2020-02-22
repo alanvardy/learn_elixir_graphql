@@ -1,4 +1,6 @@
 defmodule LearnElixirGraphqlWeb.ChannelCase do
+  alias Ecto.Adapters.SQL.Sandbox
+
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -25,7 +27,13 @@ defmodule LearnElixirGraphqlWeb.ChannelCase do
     end
   end
 
-  setup _tags do
+  setup tags do
+    :ok = Sandbox.checkout(LearnElixirGraphql.Repo)
+
+    unless tags[:async] do
+      Sandbox.mode(LearnElixirGraphql.Repo, {:shared, self()})
+    end
+
     :ok
   end
 end
