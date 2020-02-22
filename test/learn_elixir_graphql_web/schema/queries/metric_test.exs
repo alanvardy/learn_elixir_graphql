@@ -28,7 +28,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.MetricTest do
 
       first_count = get_in(data, ["resolver_hits", "hits"])
 
-      assert {:ok, %{data: data}} =
+      assert {:ok, %{data: _data}} =
                Absinthe.run(@user_doc, Schema, variables: %{"name" => "Nancy"})
 
       assert {:ok, %{data: data}} =
