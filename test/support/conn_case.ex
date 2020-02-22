@@ -1,4 +1,8 @@
 defmodule LearnElixirGraphqlWeb.ConnCase do
+  alias Ecto.Adapters.SQL.Sandbox
+  alias LearnElixirGraphql.Repo
+  alias LearnElixirGraphqlWeb.Endpoint
+
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -22,11 +26,17 @@ defmodule LearnElixirGraphqlWeb.ConnCase do
       alias LearnElixirGraphqlWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
-      @endpoint LearnElixirGraphqlWeb.Endpoint
+      @endpoint Endpoint
     end
   end
 
-  setup _tags do
+  setup tags do
+    :ok = Sandbox.checkout(Repo)
+
+    unless tags[:async] do
+      Sandbox.mode(Repo, {:shared, self()})
+    end
+
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end

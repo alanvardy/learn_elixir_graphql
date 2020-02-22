@@ -10,7 +10,8 @@ defmodule LearnElixirGraphql.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       dialyzer: dialyzer(),
-      deps: deps()
+      deps: deps(),
+      aliases: aliases()
     ]
   end
 
@@ -55,6 +56,15 @@ defmodule LearnElixirGraphql.MixProject do
       {:ex_check, ">= 0.0.0", only: :dev, runtime: false},
       {:credo, "~> 1.2.1", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0.0-rc.6", only: [:dev, :test], runtime: false}
+    ]
+  end
+
+  defp aliases do
+    [
+      "ecto.seed": ["run priv/repo/seeds.exs"],
+      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.reset": ["ecto.drop", "ecto.setup"],
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end

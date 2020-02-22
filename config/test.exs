@@ -6,5 +6,13 @@ config :learn_elixir_graphql, LearnElixirGraphqlWeb.Endpoint,
   http: [port: 4002],
   server: false
 
+config :learn_elixir_graphql, LearnElixirGraphql.Repo,
+  username: "postgres",
+  password: "postgres",
+  database: "learn_elixir_graphql_test",
+  hostname: "localhost",
+  queue_target: 10_000,
+  pool: Ecto.Adapters.SQL.Sandbox
+
 # Print only warnings and errors during test
 config :logger, level: :warn
