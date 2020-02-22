@@ -10,7 +10,7 @@ defmodule LearnElixirGraphql.Accounts do
 
   @spec all_users(params) :: {:ok, [User.t()]} | {:error, binary}
   def all_users(params) do
-    result = Actions.all(from(u in User, preload: [:preference]), params)
+    result = Actions.all(from(u in User), params)
     {:ok, result}
   end
 
@@ -36,7 +36,7 @@ defmodule LearnElixirGraphql.Accounts do
 
   @spec all_preferences(params) :: {:ok, [Preference.t()]} | {:error, binary}
   def all_preferences(params) do
-    result = Actions.all(from(p in Preference, preload: [:user]), params)
+    result = Actions.all(from(p in Preference), params)
     {:ok, result}
   end
 
