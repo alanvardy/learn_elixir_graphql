@@ -1,5 +1,5 @@
 defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
-  use LearnElixirGraphql.DataCase
+  use LearnElixirGraphql.DataCase, async: true
   alias LearnElixirGraphql.Accounts
   alias LearnElixirGraphqlWeb.Schema
 
