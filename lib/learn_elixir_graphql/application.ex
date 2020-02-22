@@ -11,6 +11,7 @@ defmodule LearnElixirGraphql.Application do
     children = [
       # Start the endpoint when the application starts
       LearnElixirGraphqlWeb.Endpoint,
+      LearnElixirGraphql.Metrics.HitTracker,
       {Absinthe.Subscription, [LearnElixirGraphqlWeb.Endpoint]},
       {LearnElixirGraphql.Repo, []}
       # Starts a worker by calling: LearnElixirGraphql.Worker.start_link(arg)
