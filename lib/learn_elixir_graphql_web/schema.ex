@@ -4,14 +4,17 @@ defmodule LearnElixirGraphqlWeb.Schema do
 
   import_types(LearnElixirGraphqlWeb.Types.User)
   import_types(LearnElixirGraphqlWeb.Types.Preference)
+  import_types(LearnElixirGraphqlWeb.Types.Metric)
   import_types(LearnElixirGraphqlWeb.Queries.User)
   import_types(LearnElixirGraphqlWeb.Queries.Preference)
+  import_types(LearnElixirGraphqlWeb.Queries.Metric)
   import_types(LearnElixirGraphqlWeb.Mutations.User)
   import_types(LearnElixirGraphqlWeb.Mutations.Preference)
 
   query do
     import_fields :user_queries
     import_fields :preference_queries
+    import_fields :metric_queries
   end
 
   mutation do
