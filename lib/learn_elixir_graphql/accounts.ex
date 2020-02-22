@@ -46,9 +46,9 @@ defmodule LearnElixirGraphql.Accounts do
   end
 
   @spec update_preference(params) :: {:error, Ecto.Changeset.t()} | {:ok, Preference.t()}
-  def update_preference(%{id: id} = params) do
-    with {:ok, preference} <- find_preference(%{id: String.to_integer(id)}) do
-      params = Map.delete(params, :id)
+  def update_preference(%{user_id: user_id} = params) do
+    with {:ok, preference} <- find_preference(%{user_id: String.to_integer(user_id)}) do
+      params = Map.delete(params, :user_id)
       Actions.update(Preference, preference, params)
     end
   end
