@@ -1,6 +1,5 @@
 defmodule LearnElixirGraphqlWeb.Schema.Queries.MetricTest do
   use LearnElixirGraphql.DataCase
-  alias LearnElixirGraphqlWeb.Schema
 
   @user_doc """
     query findUser($name: String, $email: String) {
@@ -23,40 +22,31 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.MetricTest do
 
   describe "@resolver_hits" do
     test "Will record user queries" do
-      assert {:ok, %{data: data}} =
-               Absinthe.run(@resolver_hits_doc, Schema, variables: %{"key" => "user"})
+      first_count =
+        @resolver_hits_doc
+        |> run_schema(%{"key" => "user"})
+        |> get_in(["resolver_hits", "hits"])
 
-      first_count = get_in(data, ["resolver_hits", "hits"])
+      run_schema(@user_doc, %{"name" => "Nancy"})
 
-      assert {:ok, %{data: _data}} =
-               Absinthe.run(@user_doc, Schema, variables: %{"name" => "Nancy"})
-
-      assert {:ok, %{data: data}} =
-               Absinthe.run(@resolver_hits_doc, Schema, variables: %{"key" => "user"})
-
-      second_count = get_in(data, ["resolver_hits", "hits"])
+      second_count =
+        @resolver_hits_doc
+        |> run_schema(%{"key" => "user"})
+        |> get_in(["resolver_hits", "hits"])
 
       assert second_count == first_count + 1
     end
 
     test "Records itself" do
-      assert {:ok, %{data: data}} =
-               Absinthe.run(@resolver_hits_doc, Schema, variables: %{"key" => "resolver_hits"})
+      [first, second, third] =
+        for _num <- 1..3 do
+          @resolver_hits_doc
+          |> run_schema(%{"key" => "resolver_hits"})
+          |> get_in(["resolver_hits", "hits"])
+        end
 
-      first_count = get_in(data, ["resolver_hits", "hits"])
-
-      assert {:ok, %{data: data}} =
-               Absinthe.run(@resolver_hits_doc, Schema, variables: %{"key" => "resolver_hits"})
-
-      second_count = get_in(data, ["resolver_hits", "hits"])
-
-      assert {:ok, %{data: data}} =
-               Absinthe.run(@resolver_hits_doc, Schema, variables: %{"key" => "resolver_hits"})
-
-      third_count = get_in(data, ["resolver_hits", "hits"])
-
-      assert second_count == first_count + 1
-      assert third_count == second_count + 1
+      assert second == first + 1
+      assert third == second + 1
     end
   end
 end

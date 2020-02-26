@@ -1,7 +1,5 @@
 defmodule LearnElixirGraphqlWeb.Schema.Queries.PreferenceTest do
   use LearnElixirGraphql.DataCase, async: true
-  alias LearnElixirGraphql.Accounts
-  alias LearnElixirGraphqlWeb.Schema
 
   @preference_doc """
     query findPreference($user_id: Int) {
@@ -12,29 +10,6 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.PreferenceTest do
       }
     }
   """
-
-  @user_params %{
-    name: "Bob",
-    email: "bobthebuilder@gmail.com",
-    preference: %{
-      likes_emails: true,
-      likes_phone_calls: false
-    }
-  }
-
-  describe "@preference" do
-    test "Can get the preference by user_id" do
-      assert {:ok, user} = Accounts.create_user(@user_params)
-
-      assert {:ok, %{data: data}} =
-               Absinthe.run(@preference_doc, Schema, variables: %{"user_id" => user.id})
-
-      preference = data["preference"]
-      assert preference["user_id"] === user.id
-      assert preference["likes_emails"] === user.preference.likes_emails
-      assert preference["likes_phone_calls"] === user.preference.likes_phone_calls
-    end
-  end
 
   @users_params [
     %{
@@ -53,6 +28,18 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.PreferenceTest do
       preference: %{likes_emails: false, likes_phone_calls: false}
     }
   ]
+
+  describe "@preference" do
+    setup do
+      %{users: create_users(@users_params)}
+    end
+
+    test "Can get the preference by user_id", %{users: users} do
+      user = List.first(users)
+      data = run_schema(@preference_doc, %{"user_id" => user.id})
+      assert_comparable(user.preference, data["preference"])
+    end
+  end
 
   @preferences_doc """
     query allPreferences($likes_emails: Boolean, $likes_phone_calls: Boolean) {
@@ -78,42 +65,33 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.PreferenceTest do
 
   describe "@preferences" do
     setup do
-      users =
-        for user_params <- @users_params do
-          {:ok, user} = Accounts.create_user(user_params)
-          user
-        end
-
-      %{users: users}
+      %{users: create_users(@users_params)}
     end
 
-    test "Can get all the preferences" do
-      assert {:ok, %{data: data}} = Absinthe.run(@preferences_doc, Schema, variables: %{})
-
-      assert data === %{
-               "preferences" => [
-                 %{"likes_emails" => true, "likes_phone_calls" => false},
-                 %{"likes_emails" => false, "likes_phone_calls" => true},
-                 %{"likes_emails" => false, "likes_phone_calls" => false}
-               ]
-             }
+    test "Can get all the preferences", %{users: users} do
+      data = run_schema(@preferences_doc, %{})
+      result = %{"preferences" => Enum.map(users, fn user -> user.preference end)}
+      assert_comparable(data, result)
     end
 
     test "Can find the dog" do
-      assert {:ok, %{data: data}} =
-               Absinthe.run(@preferences_with_users_doc, Schema,
-                 variables: %{"likes_emails" => false, "likes_phone_calls" => false}
-               )
+      data =
+        run_schema(@preferences_with_users_doc, %{
+          "likes_emails" => false,
+          "likes_phone_calls" => false
+        })
 
-      assert data === %{
-               "preferences" => [
-                 %{
-                   "likes_emails" => false,
-                   "likes_phone_calls" => false,
-                   "user" => %{"name" => "Dingo", "email" => "dingo@email.com"}
-                 }
-               ]
-             }
+      result = %{
+        "preferences" => [
+          %{
+            "likes_emails" => false,
+            "likes_phone_calls" => false,
+            "user" => %{"name" => "Dingo", "email" => "dingo@email.com"}
+          }
+        ]
+      }
+
+      assert data === result
     end
   end
 end
