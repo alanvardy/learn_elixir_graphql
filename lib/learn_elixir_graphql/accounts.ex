@@ -10,12 +10,14 @@ defmodule LearnElixirGraphql.Accounts do
 
   @spec all_users(params) :: {:ok, [User.t()]} | {:error, binary}
   def all_users(params) do
+    # Sorry, I know it is ugly, but Dialyzer gives me a hard fail when I use Actions.all(User, params)
     result = Actions.all(from(u in User), params)
     {:ok, result}
   end
 
   @spec find_user(params) :: {:error, binary} | {:ok, User.t()}
   def find_user(params) do
+    # Hard Dialyzer fail with Actions.find(User, params)
     from(u in User) |> Actions.find(params)
   end
 
@@ -36,12 +38,14 @@ defmodule LearnElixirGraphql.Accounts do
 
   @spec all_preferences(params) :: {:ok, [Preference.t()]} | {:error, binary}
   def all_preferences(params) do
+    # Hard Dialyzer fail with Actions.all(Preference, params)
     result = Actions.all(from(p in Preference), params)
     {:ok, result}
   end
 
   @spec find_preference(params) :: {:error, binary} | {:ok, Preference.t()}
   def find_preference(params) do
+    # Hard Dialyzer fail with Actions.find(Preference, params)
     from(p in Preference) |> Actions.find(params)
   end
 
