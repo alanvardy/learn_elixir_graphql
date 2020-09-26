@@ -10,8 +10,9 @@ use Mix.Config
 config :learn_elixir_graphql, LearnElixirGraphql.Repo,
   database: "learn_elixir_graphql_repo",
   username: "postgres",
-  password: "pass",
-  hostname: "localhost"
+  password: "postgres",
+  hostname: "localhost",
+  port: 5432
 
 # Configures the endpoint
 config :learn_elixir_graphql, LearnElixirGraphqlWeb.Endpoint,
