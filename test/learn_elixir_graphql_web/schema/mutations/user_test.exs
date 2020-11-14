@@ -32,14 +32,6 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
       assert Enum.count(users) == 1
       assert List.first(users).name == "Bobby"
     end
-
-    test "can handle changeset errors" do
-      {:ok, users} = Accounts.all_users(%{})
-      assert Enum.empty?(users)
-
-      assert [%{message: "email: can't be blank", path: ["create_user"]}] =
-               schema_errors(@create_user_doc, %{"name" => "Bobby", "token" => "faketoken"})
-    end
   end
 
   @update_user_doc """
