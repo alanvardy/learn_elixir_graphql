@@ -1,4 +1,5 @@
 defmodule LearnElixirGraphqlWeb.Middleware.Auth do
+  @moduledoc "Ensures that user is authorized by checking for a token"
   @behaviour Absinthe.Middleware
 
   @impl Absinthe.Middleware

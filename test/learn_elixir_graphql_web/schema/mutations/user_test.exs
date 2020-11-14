@@ -32,6 +32,27 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
       assert Enum.count(users) == 1
       assert List.first(users).name == "Bobby"
     end
+
+    test "cannot insert the same email address twice" do
+      schema_success(@create_user_doc, %{
+        "name" => "Bobby",
+        "email" => "bobby@email.com",
+        "token" => "faketoken"
+      })
+
+      {:ok, users} = Accounts.all_users(%{})
+      assert Enum.count(users) == 1
+      assert List.first(users).name == "Bobby"
+
+      assert [%{message: "email: has already been taken", path: ["create_user"]}] =
+               schema_errors(@create_user_doc, %{
+                 "name" => "Bobby",
+                 "email" => "bobby@email.com",
+                 "token" => "faketoken"
+               })
+
+      assert Enum.count(users) == 1
+    end
   end
 
   @update_user_doc """

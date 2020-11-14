@@ -1,5 +1,7 @@
 defmodule LearnElixirGraphqlWeb.Middleware.ChangesetErrors do
+  @moduledoc "Converts changeset errors into Absinthe errors"
   @behaviour Absinthe.Middleware
+  @spec call(Absinthe.Resolution.t(), any) :: Absinthe.Resolution.t()
   def call(resolution, _) do
     %{resolution | errors: Enum.flat_map(resolution.errors, &handle_error/1)}
   end

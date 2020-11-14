@@ -29,7 +29,6 @@ defmodule LearnElixirGraphql.Helpers do
     errors
   end
 
-
   @doc "Creates users for a list of maps containing the paramers"
   @spec create_users([map]) :: [User.t()]
   def create_users(users_params) do

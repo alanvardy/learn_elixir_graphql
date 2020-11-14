@@ -12,21 +12,6 @@ defmodule LearnElixirGraphqlWeb.Schema.Middleware.AuthTest do
   """
 
   describe "@create_user" do
-    test "creates a user" do
-      {:ok, users} = Accounts.all_users(%{})
-      assert Enum.empty?(users)
-
-      schema_success(@create_user_doc, %{
-        "name" => "Bobby",
-        "email" => "bobby@email.com",
-        "token" => "faketoken"
-      })
-
-      {:ok, users} = Accounts.all_users(%{})
-      assert Enum.count(users) == 1
-      assert List.first(users).name == "Bobby"
-    end
-
     test "Cannot create a user when no token is provided" do
       {:ok, users} = Accounts.all_users(%{})
       assert Enum.empty?(users)
@@ -51,5 +36,4 @@ defmodule LearnElixirGraphqlWeb.Schema.Middleware.AuthTest do
       {:ok, []} = Accounts.all_users(%{})
     end
   end
-
 end

@@ -33,6 +33,17 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
 
       assert user_id === user.id
     end
+
+    test "Returns an error if cannot find user" do
+      assert [
+               %{
+                 code: :not_found,
+                 details: %{params: %{name: "Donkey"}},
+                 message: "no records found",
+                 path: ["user"]
+               }
+             ] = schema_errors(@user_doc, %{"name" => "Donkey"})
+    end
   end
 
   @users_doc """
