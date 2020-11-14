@@ -33,6 +33,12 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
 
       assert user_id === user.id
     end
+
+    test "returns not found when no user found", %{users: users} do
+      user = Enum.find(users, fn user -> user.name == "Daisy" end)
+
+      assert {:error, %{code: :not_found, details: %{"name" => "Donkey"}}} = run_schema(@user_doc, %{"name" => "Donkey"})
+    end
   end
 
   @users_doc """

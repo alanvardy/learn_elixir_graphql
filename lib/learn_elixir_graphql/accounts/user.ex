@@ -25,6 +25,10 @@ defmodule LearnElixirGraphql.Accounts.User do
     %__MODULE__{}
     |> cast(attrs, @available_fields)
     |> validate_required(@available_fields)
+    |> unique_constraint(:email,
+      message: "has already been taken",
+      name: "users_email_unique_index"
+    )
     |> cast_assoc(:preference, with: &Preference.create_changeset/2)
   end
 
