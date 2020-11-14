@@ -13,6 +13,8 @@ config :learn_elixir_graphql, LearnElixirGraphqlWeb.Endpoint,
   check_origin: false,
   watchers: []
 
+  config :learn_elixir_graphql, token: "faketoken"
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

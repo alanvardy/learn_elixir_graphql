@@ -14,8 +14,8 @@ defmodule LearnElixirGraphqlWeb.Schema.Subscriptions.PreferenceTest do
   """
 
   @update_user_preferences_doc """
-    mutation updateUserPreferences($user_id: Int, $likes_emails: Boolean, $likes_phone_calls: Boolean) {
-      update_user_preferences(user_id: $user_id, likes_emails: $likes_emails, likes_phone_calls: $likes_phone_calls) {
+    mutation updateUserPreferences($user_id: Int, $likes_emails: Boolean, $likes_phone_calls: Boolean, $token: String) {
+      update_user_preferences(user_id: $user_id, likes_emails: $likes_emails, likes_phone_calls: $likes_phone_calls, token: $token) {
         user_id
         likes_emails
         likes_phone_calls
@@ -41,7 +41,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Subscriptions.PreferenceTest do
       # update the user preferences
       ref =
         push_doc(socket, @update_user_preferences_doc,
-          variables: %{"user_id" => user.id, "likes_emails" => false}
+          variables: %{"user_id" => user.id, "likes_emails" => false, "token" => "faketoken"}
         )
 
       # Assert user update response

@@ -9,6 +9,7 @@ defmodule LearnElixirGraphqlWeb.Mutations.Preference do
       arg :user_id, :integer
       arg :likes_emails, :boolean
       arg :likes_phone_calls, :boolean
+      arg :token, non_null(:string), description: "Required for authentication"
 
       resolve &Resolvers.Preference.update/2
     end

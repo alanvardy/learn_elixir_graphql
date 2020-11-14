@@ -14,5 +14,7 @@ config :learn_elixir_graphql, LearnElixirGraphql.Repo,
   queue_target: 10_000,
   pool: Ecto.Adapters.SQL.Sandbox
 
+  config :learn_elixir_graphql, token: "faketoken"
+
 # Print only warnings and errors during test
 config :logger, level: :warn

@@ -9,8 +9,8 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
   }
 
   @create_user_doc """
-    mutation createUser($name: String, $email: String) {
-      create_user(name: $name, email: $email) {
+    mutation createUser($name: String, $email: String, $token: String) {
+      create_user(name: $name, email: $email, token: $token) {
         name
         email
       }
@@ -22,7 +22,11 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
       {:ok, users} = Accounts.all_users(%{})
       assert Enum.empty?(users)
 
-      schema_success(@create_user_doc, %{"name" => "Bobby", "email" => "bobby@email.com"})
+      schema_success(@create_user_doc, %{
+        "name" => "Bobby",
+        "email" => "bobby@email.com",
+        "token" => "faketoken"
+      })
 
       {:ok, users} = Accounts.all_users(%{})
       assert Enum.count(users) == 1
@@ -33,19 +37,14 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
       {:ok, users} = Accounts.all_users(%{})
       assert Enum.empty?(users)
 
-      assert [
-               %{
-                 locations: [%{column: 0, line: 2}],
-                 message: "email: can't be blank",
-                 path: ["create_user"]
-               }
-             ] = schema_errors(@create_user_doc, %{"name" => "Bobby"})
+      assert [%{message: "email: can't be blank", path: ["create_user"]}] =
+               schema_errors(@create_user_doc, %{"name" => "Bobby", "token" => "faketoken"})
     end
   end
 
   @update_user_doc """
-    mutation updateUser($id: Int, $name: String, $email: String) {
-      update_user(id: $id, name: $name, email: $email) {
+    mutation updateUser($id: Int, $name: String, $email: String, $token: String) {
+      update_user(id: $id, name: $name, email: $email, token: $token) {
         id
         name
         email
@@ -62,7 +61,8 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
       schema_success(@update_user_doc, %{
         "id" => user.id,
         "name" => "Buffy",
-        "email" => "buffy@email.com"
+        "email" => "buffy@email.com",
+        "token" => "faketoken"
       })
 
       {:ok, user} = Accounts.find_user(%{"id" => to_string(user.id)})
@@ -71,8 +71,8 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
   end
 
   @update_user_preferences_doc """
-  mutation updateUser($user_id: Int, $likes_emails: Boolean, $likes_phone_calls: Boolean) {
-    update_user_preferences(user_id: $user_id, likes_emails: $likes_emails, likes_phone_calls: $likes_phone_calls) {
+  mutation updateUser($user_id: Int, $likes_emails: Boolean, $likes_phone_calls: Boolean, $token: String) {
+    update_user_preferences(user_id: $user_id, likes_emails: $likes_emails, likes_phone_calls: $likes_phone_calls, token: $token) {
       user_id
       likes_emails
       likes_phone_calls
@@ -93,7 +93,8 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
       schema_success(@update_user_preferences_doc, %{
         "user_id" => user.id,
         "likes_emails" => false,
-        "likes_phone_calls" => false
+        "likes_phone_calls" => false,
+        "token" => "faketoken"
       })
 
       {:ok, preference} = Accounts.find_preference(%{"user_id" => to_string(user.id)})

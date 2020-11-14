@@ -11,9 +11,17 @@ secret_key_base =
     You can generate one by calling: mix phx.gen.secret
     """
 
+token =
+  System.get_env("TOKEN") ||
+    raise """
+    environment variable TOKEN is missing.
+    """
+
 config :learn_elixir_graphql, LearnElixirGraphqlWeb.Endpoint,
   http: [:inet6, port: String.to_integer(System.get_env("PORT") || "4000")],
   secret_key_base: secret_key_base
+
+  config :learn_elixir_graphql, token: token
 
 # ## Using releases (Elixir v1.9+)
 #
