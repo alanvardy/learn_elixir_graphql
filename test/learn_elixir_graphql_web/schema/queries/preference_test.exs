@@ -36,7 +36,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.PreferenceTest do
 
     test "Can get the preference by user_id", %{users: users} do
       user = List.first(users)
-      data = run_schema(@preference_doc, %{"user_id" => user.id})
+      data = schema_success(@preference_doc, %{"user_id" => user.id})
       assert_comparable(user.preference, data["preference"])
     end
   end
@@ -69,14 +69,14 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.PreferenceTest do
     end
 
     test "Can get all the preferences", %{users: users} do
-      data = run_schema(@preferences_doc, %{})
+      data = schema_success(@preferences_doc, %{})
       result = %{"preferences" => Enum.map(users, fn user -> user.preference end)}
       assert_comparable(data, result)
     end
 
     test "Can find the dog" do
       data =
-        run_schema(@preferences_with_users_doc, %{
+        schema_success(@preferences_with_users_doc, %{
           "likes_emails" => false,
           "likes_phone_calls" => false
         })

@@ -1,7 +1,6 @@
 defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
   use LearnElixirGraphql.DataCase, async: true
   alias LearnElixirGraphql.Accounts
-  alias LearnElixirGraphqlWeb.Schema
 
   @user_params %{
     "name" => "Duffy",
@@ -23,11 +22,24 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
       {:ok, users} = Accounts.all_users(%{})
       assert Enum.empty?(users)
 
-      run_schema(@create_user_doc, %{"name" => "Bobby", "email" => "bobby@email.com"})
+      schema_success(@create_user_doc, %{"name" => "Bobby", "email" => "bobby@email.com"})
 
       {:ok, users} = Accounts.all_users(%{})
       assert Enum.count(users) == 1
       assert List.first(users).name == "Bobby"
+    end
+
+    test "can handle changeset errors" do
+      {:ok, users} = Accounts.all_users(%{})
+      assert Enum.empty?(users)
+
+      assert [
+               %{
+                 locations: [%{column: 0, line: 2}],
+                 message: "email: can't be blank",
+                 path: ["create_user"]
+               }
+             ] = schema_errors(@create_user_doc, %{"name" => "Bobby"})
     end
   end
 
@@ -47,7 +59,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
     end
 
     test "updates a user", %{user: user} do
-      run_schema(@update_user_doc, %{
+      schema_success(@update_user_doc, %{
         "id" => user.id,
         "name" => "Buffy",
         "email" => "buffy@email.com"
@@ -78,7 +90,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
       assert preference.likes_emails == true
       assert preference.likes_phone_calls == true
 
-      run_schema(@update_user_preferences_doc, %{
+      schema_success(@update_user_preferences_doc, %{
         "user_id" => user.id,
         "likes_emails" => false,
         "likes_phone_calls" => false

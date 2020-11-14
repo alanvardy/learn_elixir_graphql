@@ -27,17 +27,11 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
 
       user_id =
         @user_doc
-        |> run_schema(%{"name" => "Daisy"})
+        |> schema_success(%{"name" => "Daisy"})
         |> get_in(["user", "id"])
         |> String.to_integer()
 
       assert user_id === user.id
-    end
-
-    test "returns not found when no user found", %{users: users} do
-      user = Enum.find(users, fn user -> user.name == "Daisy" end)
-
-      assert {:error, %{code: :not_found, details: %{"name" => "Donkey"}}} = run_schema(@user_doc, %{"name" => "Donkey"})
     end
   end
 
@@ -59,7 +53,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
     test "Can get all the users", %{users: users} do
       queried_users =
         @users_doc
-        |> run_schema(%{})
+        |> schema_success(%{})
         |> Map.get("users")
 
       assert Enum.count(queried_users) == 3
@@ -72,7 +66,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
     test "Can get the first 2 users", %{users: users} do
       queried_user_ids =
         @users_doc
-        |> run_schema(%{"first" => 2})
+        |> schema_success(%{"first" => 2})
         |> Map.get("users")
         |> Enum.map(fn user -> String.to_integer(user["id"]) end)
 
@@ -83,7 +77,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
     test "Can get a user by name", %{users: users} do
       queried_user_ids =
         @users_doc
-        |> run_schema(%{"name" => "Duke"})
+        |> schema_success(%{"name" => "Duke"})
         |> Map.get("users")
         |> Enum.map(fn user -> String.to_integer(user["id"]) end)
 

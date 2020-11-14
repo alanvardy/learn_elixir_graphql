@@ -5,12 +5,30 @@ defmodule LearnElixirGraphql.Helpers do
   alias LearnElixirGraphql.Accounts
   alias LearnElixirGraphqlWeb.Schema
 
-  @doc ""
-  @spec run_schema(String.t(), %{optional(String.t()) => any()}) :: any
+  @doc "Run a query and return data"
+  @spec run_schema(String.t(), %{optional(String.t()) => any()}) :: {:ok, map}
   def run_schema(document, variables) do
     assert {:ok, %{data: data}} = Absinthe.run(document, Schema, variables: variables)
     data
   end
+
+  @doc "Run a query against an Absinthe Schema, expecting no errors"
+  @spec schema_success(String.t(), %{optional(String.t()) => any()}) :: map
+  def schema_success(document, variables) do
+    {:ok, result} = Absinthe.run(document, Schema, variables: variables)
+    refute Map.get(result, :errors)
+    data = Map.get(result, :data)
+    assert data
+    data
+  end
+
+  @doc "Run a query against an Absinthe Schema, expecting errors and returning them"
+  @spec schema_errors(String.t(), %{optional(String.t()) => any()}) :: [map | tuple]
+  def schema_errors(document, variables) do
+    assert {:ok, %{errors: errors}} = Absinthe.run(document, Schema, variables: variables)
+    errors
+  end
+
 
   @doc "Creates users for a list of maps containing the paramers"
   @spec create_users([map]) :: [User.t()]

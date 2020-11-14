@@ -1,6 +1,7 @@
 defmodule LearnElixirGraphqlWeb.Schema do
   @moduledoc "Main schema for Absinthe"
   use Absinthe.Schema
+  alias LearnElixirGraphqlWeb.Middleware.ChangesetErrors
 
   import_types(LearnElixirGraphqlWeb.Types.User)
   import_types(LearnElixirGraphqlWeb.Types.Preference)
@@ -42,4 +43,10 @@ defmodule LearnElixirGraphqlWeb.Schema do
   def plugins do
     [Absinthe.Middleware.Dataloader] ++ Absinthe.Plugin.defaults()
   end
+
+  def middleware(middleware, _field, %{identifier: :mutation}) do
+    middleware ++ [ChangesetErrors]
+  end
+
+  def middleware(middleware, _field, _object), do: middleware
 end
