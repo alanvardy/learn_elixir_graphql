@@ -48,7 +48,14 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
       assert Enum.count(users) == 1
       assert List.first(users).name == "Bobby"
 
-      assert [%{message: "email: has already been taken", path: ["create_user"]}] =
+      assert [
+               %{
+                 message:
+                   "Conflict on %LearnElixirGraphql.Accounts.User{__meta__: #Ecto.Schema.Metadata<:built, \"users\">, email: nil, id: nil, name: nil, preference: #Ecto.Association.NotLoaded<association :preference is not loaded>}",
+                 path: ["create_user"],
+                 details: %{code: :conflict, params: %{key: :email}}
+               }
+             ] =
                schema_errors(@create_user_doc, %{
                  "name" => "Bobby",
                  "email" => "bobby@email.com",
@@ -77,7 +84,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
                    },
                    params: %{email: "bobby@email.com", name: _}
                  },
-                 message: :internal_server_error,
+                 message: "Internal server error",
                  path: ["create_user"]
                }
              ] =
