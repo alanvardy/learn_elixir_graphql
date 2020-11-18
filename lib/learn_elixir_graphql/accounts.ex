@@ -2,6 +2,7 @@ defmodule LearnElixirGraphql.Accounts do
   @moduledoc "The Accounts context, including Users and Preferences"
   alias EctoShorts.Actions
   alias LearnElixirGraphql.Accounts.{Preference, User}
+  alias LearnElixirGraphql.ErrorUtils
   import Ecto.Query
 
   @type params :: keyword | map
@@ -19,11 +20,15 @@ defmodule LearnElixirGraphql.Accounts do
   def find_user(params) do
     # Hard Dialyzer fail with Actions.find(User, params)
     from(u in User) |> Actions.find(params)
+  rescue
+    e -> ErrorUtils.internal_server_error_found(e, params)
   end
 
   @spec create_user(params) :: {:error, Ecto.Changeset.t()} | {:ok, User.t()}
   def create_user(params) do
     Actions.create(User, params)
+  rescue
+    e -> ErrorUtils.internal_server_error_found(e, params)
   end
 
   @spec update_user(%{id: binary}) :: {:error, Ecto.Changeset.t()} | {:ok, User.t()}
@@ -32,6 +37,8 @@ defmodule LearnElixirGraphql.Accounts do
       params = Map.delete(params, :id)
       Actions.update(User, user, params)
     end
+  rescue
+    e -> ErrorUtils.internal_server_error_found(e, params)
   end
 
   # PREFERENCES
@@ -55,5 +62,7 @@ defmodule LearnElixirGraphql.Accounts do
       params = Map.delete(params, :user_id)
       Actions.update(Preference, preference, params)
     end
+  rescue
+    e -> ErrorUtils.internal_server_error_found(e, params)
   end
 end

@@ -2,6 +2,10 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
   use LearnElixirGraphql.DataCase, async: true
   alias LearnElixirGraphql.Accounts
 
+  @long_string 1..256
+               |> Enum.map(&to_string/1)
+               |> Enum.join()
+
   @user_params %{
     "name" => "Duffy",
     "email" => "duffy@email.com",
@@ -52,6 +56,36 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
                })
 
       assert Enum.count(users) == 1
+    end
+
+    test "returns an internal server error" do
+      assert [
+               %{
+                 details: %{
+                   error_struct: %Postgrex.Error{
+                     message: nil,
+                     postgres: %{
+                       code: :string_data_right_truncation,
+                       file: "varchar.c",
+                       message: "value too long for type character varying(255)",
+                       pg_code: "22001",
+                       routine: "varchar",
+                       severity: "ERROR",
+                       unknown: "ERROR"
+                     },
+                     query: nil
+                   },
+                   params: %{email: "bobby@email.com", name: _}
+                 },
+                 message: :internal_server_error,
+                 path: ["create_user"]
+               }
+             ] =
+               schema_errors(@create_user_doc, %{
+                 "name" => @long_string,
+                 "email" => "bobby@email.com",
+                 "token" => "faketoken"
+               })
     end
   end
 
