@@ -25,6 +25,7 @@ defmodule LearnElixirGraphql.Accounts.User do
     %__MODULE__{}
     |> cast(attrs, @available_fields)
     |> validate_required(@available_fields)
+    |> validate_length(:name, max: 255)
     |> unique_constraint(:email,
       message: "has already been taken",
       name: "users_email_unique_index"

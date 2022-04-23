@@ -3,7 +3,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Middleware.ChangesetErrorsTest do
   alias LearnElixirGraphql.Accounts
 
   @create_user_doc """
-    mutation createUser($name: String, $email: String, $token: String) {
+    mutation createUser($name: String, $email: String, $token: String!) {
       create_user(name: $name, email: $email, token: $token) {
         name
         email

@@ -2,9 +2,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
   use LearnElixirGraphql.DataCase, async: true
   alias LearnElixirGraphql.Accounts
 
-  @long_string 1..256
-               |> Enum.map(&to_string/1)
-               |> Enum.join()
+  @long_string Enum.map_join(1..256, &to_string/1)
 
   @user_params %{
     "name" => "Duffy",
@@ -13,7 +11,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
   }
 
   @create_user_doc """
-    mutation createUser($name: String, $email: String, $token: String) {
+    mutation createUser($name: String, $email: String, $token: String!) {
       create_user(name: $name, email: $email, token: $token) {
         name
         email
@@ -66,28 +64,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
     end
 
     test "returns an internal server error" do
-      assert [
-               %{
-                 details: %{
-                   error_struct: %Postgrex.Error{
-                     message: nil,
-                     postgres: %{
-                       code: :string_data_right_truncation,
-                       file: "varchar.c",
-                       message: "value too long for type character varying(255)",
-                       pg_code: "22001",
-                       routine: "varchar",
-                       severity: "ERROR",
-                       unknown: "ERROR"
-                     },
-                     query: nil
-                   },
-                   params: %{email: "bobby@email.com", name: _}
-                 },
-                 message: "Internal server error",
-                 path: ["create_user"]
-               }
-             ] =
+      assert [%{message: "name: should be at most %{count} character(s)"}] =
                schema_errors(@create_user_doc, %{
                  "name" => @long_string,
                  "email" => "bobby@email.com",
@@ -97,7 +74,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
   end
 
   @update_user_doc """
-    mutation updateUser($id: Int, $name: String, $email: String, $token: String) {
+    mutation updateUser($id: ID, $name: String, $email: String, $token: String!) {
       update_user(id: $id, name: $name, email: $email, token: $token) {
         id
         name
@@ -125,7 +102,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
   end
 
   @update_user_preferences_doc """
-  mutation updateUser($user_id: Int, $likes_emails: Boolean, $likes_phone_calls: Boolean, $token: String) {
+  mutation updateUser($user_id: ID!, $likes_emails: Boolean, $likes_phone_calls: Boolean, $token: String!) {
     update_user_preferences(user_id: $user_id, likes_emails: $likes_emails, likes_phone_calls: $likes_phone_calls, token: $token) {
       user_id
       likes_emails

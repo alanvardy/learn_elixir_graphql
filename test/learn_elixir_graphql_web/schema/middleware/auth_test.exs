@@ -3,7 +3,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Middleware.AuthTest do
   alias LearnElixirGraphql.Accounts
 
   @create_user_doc """
-    mutation createUser($name: String, $email: String, $token: String) {
+    mutation createUser($name: String, $email: String, $token: String!) {
       create_user(name: $name, email: $email, token: $token) {
         name
         email
@@ -16,7 +16,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Middleware.AuthTest do
       {:ok, users} = Accounts.all_users(%{})
       assert Enum.empty?(users)
 
-      [%{message: "In argument \"token\": Expected type \"String!\", found null."}] =
+      [%{message: "In argument \"token\": Expected type \"String!\", found null."}, _] =
         schema_errors(@create_user_doc, %{"name" => "Bobby", "email" => "bobby@email.com"})
 
       {:ok, []} = Accounts.all_users(%{})

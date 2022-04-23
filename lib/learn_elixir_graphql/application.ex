@@ -10,6 +10,7 @@ defmodule LearnElixirGraphql.Application do
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
+      {Phoenix.PubSub, [name: LearnElixirGraphql.PubSub, adapter: Phoenix.PubSub.PG2]},
       LearnElixirGraphqlWeb.Endpoint,
       LearnElixirGraphql.Metrics.HitTracker,
       {Absinthe.Subscription, [LearnElixirGraphqlWeb.Endpoint]},

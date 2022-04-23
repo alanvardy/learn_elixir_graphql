@@ -2,7 +2,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.PreferenceTest do
   use LearnElixirGraphql.DataCase, async: true
 
   @preference_doc """
-    query findPreference($user_id: Int) {
+    query findPreference($user_id: ID) {
       preference(user_id: $user_id) {
         user_id,
         likes_emails,

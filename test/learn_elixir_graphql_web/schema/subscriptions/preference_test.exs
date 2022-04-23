@@ -4,7 +4,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Subscriptions.PreferenceTest do
   alias LearnElixirGraphql.Accounts
 
   @updated_user_preferences_sub_doc """
-  subscription updatedUserPreferences($user_id: Int) {
+  subscription updatedUserPreferences($user_id: ID) {
     updated_user_preferences(user_id: $user_id) {
       user_id
       likes_emails
@@ -14,7 +14,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Subscriptions.PreferenceTest do
   """
 
   @update_user_preferences_doc """
-    mutation updateUserPreferences($user_id: Int, $likes_emails: Boolean, $likes_phone_calls: Boolean, $token: String) {
+    mutation updateUserPreferences($user_id: ID!, $likes_emails: Boolean, $likes_phone_calls: Boolean, $token: String!) {
       update_user_preferences(user_id: $user_id, likes_emails: $likes_emails, likes_phone_calls: $likes_phone_calls, token: $token) {
         user_id
         likes_emails

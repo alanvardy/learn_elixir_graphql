@@ -1,7 +1,7 @@
 version: '3'
 services:
   learn_elixir_graphql_dbserver:
-    image: postgres:12.4
+    image: postgres:14.2
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
