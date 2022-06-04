@@ -27,8 +27,10 @@ defmodule LearnElixirGraphql.MixProject do
 
   defp dialyzer do
     [
-      plt_add_deps: :transitive,
-      ignore_warnings: ".dialyzer-ignore.exs"
+      plt_ignore_apps: [:ecto_shorts],
+      ignore_warnings: ".dialyzer-ignore.exs",
+      list_unused_filters: true,
+      flags: [:extra_return, :missing_return]
     ]
   end
 

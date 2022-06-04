@@ -2,7 +2,7 @@ defmodule LearnElixirGraphql.Metrics.HitTracker do
   @moduledoc "Process which keeps track of the number of times any particular resolver has been hit"
   use Agent
 
-  @spec start_link(maybe_improper_list) :: :ignore | {:error, any} | {:ok, pid}
+  @spec start_link(maybe_improper_list) :: {:error, any} | {:ok, pid}
   def start_link(_opts) do
     Agent.start_link(fn -> %{} end, name: __MODULE__)
   end

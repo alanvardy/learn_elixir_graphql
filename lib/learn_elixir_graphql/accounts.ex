@@ -5,18 +5,20 @@ defmodule LearnElixirGraphql.Accounts do
   alias LearnElixirGraphql.ErrorUtils
   import Ecto.Query
 
-  @type params :: keyword | map
+  @type params :: map
+  @type error :: %{code: atom, message: String.t(), details: map}
+  @type changeset :: Ecto.Changeset.t()
 
   # USERS
 
-  @spec all_users(params) :: {:ok, [User.t()]} | {:error, binary}
+  @spec all_users(params) :: {:ok, [User.t()]}
   def all_users(params) do
     # Sorry, I know it is ugly, but Dialyzer gives me a hard fail when I use Actions.all(User, params)
     result = Actions.all(from(u in User), params)
     {:ok, result}
   end
 
-  @spec find_user(params) :: {:error, binary} | {:ok, User.t()}
+  @spec find_user(params) :: {:error, error} | {:ok, User.t()}
   def find_user(params) do
     # Hard Dialyzer fail with Actions.find(User, params)
     from(u in User) |> Actions.find(params)
@@ -24,14 +26,14 @@ defmodule LearnElixirGraphql.Accounts do
     e -> ErrorUtils.internal_server_error_found(e, params)
   end
 
-  @spec create_user(params) :: {:error, Ecto.Changeset.t()} | {:ok, User.t()}
+  @spec create_user(params) :: {:error, changeset} | {:ok, User.t()}
   def create_user(params) do
     Actions.create(User, params)
   rescue
     e -> ErrorUtils.internal_server_error_found(e, params)
   end
 
-  @spec update_user(%{id: binary}) :: {:error, Ecto.Changeset.t()} | {:ok, User.t()}
+  @spec update_user(%{id: String.t()}) :: {:error, error | changeset} | {:ok, User.t()}
   def update_user(%{id: id} = params) do
     with {:ok, user} <- find_user(%{id: String.to_integer(id)}) do
       params = Map.delete(params, :id)
@@ -43,20 +45,20 @@ defmodule LearnElixirGraphql.Accounts do
 
   # PREFERENCES
 
-  @spec all_preferences(params) :: {:ok, [Preference.t()]} | {:error, binary}
+  @spec all_preferences(params) :: {:ok, [Preference.t()]}
   def all_preferences(params) do
     # Hard Dialyzer fail with Actions.all(Preference, params)
     result = Actions.all(from(p in Preference), params)
     {:ok, result}
   end
 
-  @spec find_preference(params) :: {:error, binary} | {:ok, Preference.t()}
+  @spec find_preference(map) :: {:error, error} | {:ok, Preference.t()}
   def find_preference(params) do
     # Hard Dialyzer fail with Actions.find(Preference, params)
     from(p in Preference) |> Actions.find(params)
   end
 
-  @spec update_preference(params) :: {:error, Ecto.Changeset.t()} | {:ok, Preference.t()}
+  @spec update_preference(params) :: {:error, error | changeset} | {:ok, Preference.t()}
   def update_preference(%{user_id: user_id} = params) do
     with {:ok, preference} <- find_preference(%{user_id: String.to_integer(user_id)}) do
       params = Map.delete(params, :user_id)
