@@ -1,8 +1,7 @@
-defmodule LearnElixirGraphql.Helpers do
+defmodule LearnElixirGraphql.Support.Helpers do
   @moduledoc "Helpers for tests"
 
   import ExUnit.Assertions
-  alias LearnElixirGraphql.Accounts
   alias LearnElixirGraphqlWeb.Schema
 
   @doc "Run a query and return data"
@@ -29,19 +28,6 @@ defmodule LearnElixirGraphql.Helpers do
     errors
   end
 
-  @doc "Creates users for a list of maps containing the paramers"
-  @spec create_users([map]) :: [User.t()]
-  def create_users(users_params) do
-    for params <- users_params, do: create_user(params)
-  end
-
-  @doc "Creates a user from a map of parameters"
-  @spec create_user(map) :: User.t()
-  def create_user(user_params) do
-    {:ok, user} = Accounts.create_user(user_params)
-    user
-  end
-
   @doc """
   Takes two data structures and attempts to normalize them for comparison
   i.e. change structs to maps, atom keys to string keys
@@ -52,7 +38,7 @@ defmodule LearnElixirGraphql.Helpers do
     assert convert(left) == convert(right)
   end
 
-  @bad_keys ["__meta__", "id", "user", "user_id"]
+  @bad_keys ["__meta__", "id", "user", "user_id", "inserted_at", "updated_at"]
 
   defp convert(struct) when is_struct(struct) do
     struct

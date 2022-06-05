@@ -1,6 +1,7 @@
 defmodule LearnElixirGraphqlWeb.Schema.Middleware.AuthTest do
   use LearnElixirGraphql.DataCase, async: true
   alias LearnElixirGraphql.Accounts
+  alias LearnElixirGraphql.Support.Helpers
 
   @create_user_doc """
     mutation createUser($name: String, $email: String, $token: String!) {
@@ -17,7 +18,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Middleware.AuthTest do
       assert Enum.empty?(users)
 
       [%{message: "In argument \"token\": Expected type \"String!\", found null."}, _] =
-        schema_errors(@create_user_doc, %{"name" => "Bobby", "email" => "bobby@email.com"})
+        Helpers.schema_errors(@create_user_doc, %{"name" => "Bobby", "email" => "bobby@email.com"})
 
       {:ok, []} = Accounts.all_users(%{})
     end
@@ -27,7 +28,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Middleware.AuthTest do
       assert Enum.empty?(users)
 
       [%{message: "invalid_token", path: ["create_user"]}] =
-        schema_errors(@create_user_doc, %{
+        Helpers.schema_errors(@create_user_doc, %{
           "name" => "Bobby",
           "email" => "bobby@email.com",
           "token" => "totallynottherighttoken"

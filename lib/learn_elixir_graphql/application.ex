@@ -11,15 +11,17 @@ defmodule LearnElixirGraphql.Application do
   def start(_type, _args) do
     HitTracker.start()
     # List all child processes to be supervised
-    children = [
-      # Start the endpoint when the application starts
-      {Phoenix.PubSub, [name: LearnElixirGraphql.PubSub, adapter: Phoenix.PubSub.PG2]},
-      LearnElixirGraphqlWeb.Endpoint,
-      {Absinthe.Subscription, [LearnElixirGraphqlWeb.Endpoint]},
-      {LearnElixirGraphql.Repo, []}
-      # Starts a worker by calling: LearnElixirGraphql.Worker.start_link(arg)
-      # {LearnElixirGraphql.Worker, arg},
-    ]
+    children =
+      [
+        # Start the endpoint when the application starts
+        {Phoenix.PubSub, [name: LearnElixirGraphql.PubSub, adapter: Phoenix.PubSub.PG2]},
+        LearnElixirGraphqlWeb.Endpoint,
+        {Absinthe.Subscription, [LearnElixirGraphqlWeb.Endpoint]},
+        {LearnElixirGraphql.Repo, []}
+
+        # Starts a worker by calling: LearnElixirGraphql.Worker.start_link(arg)
+        # {LearnElixirGraphql.Worker, arg},
+      ] ++ pipeline_supervisor()
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
@@ -33,5 +35,11 @@ defmodule LearnElixirGraphql.Application do
   def config_change(changed, _new, removed) do
     LearnElixirGraphqlWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  if Mix.env() !== :test do
+    defp pipeline_supervisor, do: [{LearnElixirGraphql.Pipeline.Supervisor, caller: self()}]
+  else
+    defp pipeline_supervisor, do: []
   end
 end

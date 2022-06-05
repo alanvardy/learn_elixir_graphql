@@ -1,11 +1,9 @@
 defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
   use LearnElixirGraphql.DataCase, async: true
 
-  @users_params [
-    %{name: "Duke", email: "duke@email.com"},
-    %{name: "Daisy", email: "daisy@email.com"},
-    %{name: "Dingo", email: "dingo@email.com"}
-  ]
+  import LearnElixirGraphql.Support.TestSetup
+
+  alias LearnElixirGraphql.Support.Helpers
 
   @user_doc """
     query findUser($name: String, $email: String) {
@@ -18,16 +16,14 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
   """
 
   describe "@user" do
-    setup do
-      %{users: create_users(@users_params)}
-    end
+    setup :users
 
     test "Can get the user by name", %{users: users} do
       user = Enum.find(users, fn user -> user.name == "Daisy" end)
 
       user_id =
         @user_doc
-        |> schema_success(%{"name" => "Daisy"})
+        |> Helpers.schema_success(%{"name" => "Daisy"})
         |> get_in(["user", "id"])
         |> String.to_integer()
 
@@ -42,7 +38,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
                  message: "no records found",
                  path: ["user"]
                }
-             ] = schema_errors(@user_doc, %{"name" => "Donkey"})
+             ] = Helpers.schema_errors(@user_doc, %{"name" => "Donkey"})
     end
   end
 
@@ -57,14 +53,12 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
   """
 
   describe "@users" do
-    setup do
-      %{users: create_users(@users_params)}
-    end
+    setup :users
 
     test "Can get all the users", %{users: users} do
       queried_users =
         @users_doc
-        |> schema_success(%{})
+        |> Helpers.schema_success(%{})
         |> Map.get("users")
 
       assert Enum.count(queried_users) == 3
@@ -77,7 +71,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
     test "Can get the first 2 users", %{users: users} do
       queried_user_ids =
         @users_doc
-        |> schema_success(%{"first" => 2})
+        |> Helpers.schema_success(%{"first" => 2})
         |> Map.get("users")
         |> Enum.map(fn user -> String.to_integer(user["id"]) end)
 
@@ -88,7 +82,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
     test "Can get a user by name", %{users: users} do
       queried_user_ids =
         @users_doc
-        |> schema_success(%{"name" => "Duke"})
+        |> Helpers.schema_success(%{"name" => "Duke"})
         |> Map.get("users")
         |> Enum.map(fn user -> String.to_integer(user["id"]) end)
 

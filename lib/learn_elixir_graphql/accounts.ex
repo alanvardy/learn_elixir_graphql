@@ -1,9 +1,9 @@
 defmodule LearnElixirGraphql.Accounts do
   @moduledoc "The Accounts context, including Users and Preferences"
   alias EctoShorts.Actions
-  alias LearnElixirGraphql.Accounts.{Preference, User}
+  alias LearnElixirGraphql.Accounts.{Preference, Token, User}
   alias LearnElixirGraphql.ErrorUtils
-  import Ecto.Query
+  alias LearnElixirGraphql.Repo
 
   @type params :: map
   @type error :: %{code: atom, message: String.t(), details: map}
@@ -13,15 +13,12 @@ defmodule LearnElixirGraphql.Accounts do
 
   @spec all_users(params) :: {:ok, [User.t()]}
   def all_users(params) do
-    # Sorry, I know it is ugly, but Dialyzer gives me a hard fail when I use Actions.all(User, params)
-    result = Actions.all(from(u in User), params)
-    {:ok, result}
+    {:ok, Actions.all(User, params)}
   end
 
   @spec find_user(params) :: {:error, error} | {:ok, User.t()}
   def find_user(params) do
-    # Hard Dialyzer fail with Actions.find(User, params)
-    from(u in User) |> Actions.find(params)
+    Actions.find(User, params)
   rescue
     e -> ErrorUtils.internal_server_error_found(e, params)
   end
@@ -47,15 +44,12 @@ defmodule LearnElixirGraphql.Accounts do
 
   @spec all_preferences(params) :: {:ok, [Preference.t()]}
   def all_preferences(params) do
-    # Hard Dialyzer fail with Actions.all(Preference, params)
-    result = Actions.all(from(p in Preference), params)
-    {:ok, result}
+    {:ok, Actions.all(Preference, params)}
   end
 
   @spec find_preference(map) :: {:error, error} | {:ok, Preference.t()}
   def find_preference(params) do
-    # Hard Dialyzer fail with Actions.find(Preference, params)
-    from(p in Preference) |> Actions.find(params)
+    Actions.find(Preference, params)
   end
 
   @spec update_preference(params) :: {:error, error | changeset} | {:ok, Preference.t()}
@@ -66,5 +60,44 @@ defmodule LearnElixirGraphql.Accounts do
     end
   rescue
     e -> ErrorUtils.internal_server_error_found(e, params)
+  end
+
+  # TOKEN
+
+  @spec find_token(params) :: {:error, error} | {:ok, Token.t()}
+  def find_token(params) do
+    Actions.find(Token, params)
+  rescue
+    e -> ErrorUtils.internal_server_error_found(e, params)
+  end
+
+  @spec update_token(map) :: {:error, error | changeset} | {:ok, Token.t()}
+  def update_token(%{id: id} = params) do
+    with {:ok, auth} <- find_token(%{id: String.to_integer(id)}) do
+      params = Map.delete(params, :id)
+      Actions.update(Token, auth, params)
+    end
+  rescue
+    e -> ErrorUtils.internal_server_error_found(e, params)
+  end
+
+  @spec update_token(pos_integer, map) :: {:error, error | changeset} | {:ok, Token.t()}
+  def update_token(id, updates, caller \\ self()) do
+    Actions.update(Token, id, updates, caller: caller)
+  end
+
+  def all_expired_tokens(limit, caller \\ self()) do
+    limit
+    |> Token.limit()
+    |> Token.where_expired()
+    |> Repo.all(caller: caller)
+  end
+
+  def refresh_token(%Token{id: id}, caller \\ self()) do
+    update_token(id, %{token: generate_token()}, caller)
+  end
+
+  def generate_token do
+    Base.encode32(:crypto.strong_rand_bytes(50), padding: false)
   end
 end

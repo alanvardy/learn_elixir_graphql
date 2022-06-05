@@ -1,27 +1,31 @@
-defmodule LearnElixirGraphql.Accounts.Preference do
+defmodule LearnElixirGraphql.Accounts.Token do
   @moduledoc "User preferences"
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
   alias LearnElixirGraphql.Accounts.User
+
+  # TODO move to configuration
+  @max_age :timer.hours(24)
+
+  @timestamps_opts type: :utc_datetime_usec
 
   @type t :: %__MODULE__{
           id: pos_integer | nil,
-          likes_emails: boolean | nil,
-          likes_phone_calls: boolean | nil,
+          token: String.t() | nil,
           user: User.t() | Ecto.Association.NotLoaded.t() | nil,
           inserted_at: DateTime.t() | nil,
           updated_at: DateTime.t() | nil
         }
 
-  schema "preferences" do
-    field :likes_emails, :boolean, default: false
-    field :likes_phone_calls, :boolean, default: false
+  schema "tokens" do
+    field :token, :string
     belongs_to :user, User
 
     timestamps(type: :utc_datetime_usec)
   end
 
-  @cast [:likes_emails, :likes_phone_calls]
+  @cast [:token]
 
   @doc false
   @spec create_changeset(map) :: Ecto.Changeset.t()
@@ -45,5 +49,15 @@ defmodule LearnElixirGraphql.Accounts.Preference do
     preference
     |> cast(attrs, @cast)
     |> validate_required(@cast)
+  end
+
+  def limit(query \\ __MODULE__, limit) do
+    limit(query, [t], ^limit)
+  end
+
+  def where_expired(query \\ __MODULE__) do
+    max_age = DateTime.add(DateTime.utc_now(), -@max_age, :millisecond)
+
+    where(query, [t], t.updated_at <= ^max_age)
   end
 end

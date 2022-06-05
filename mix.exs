@@ -57,7 +57,8 @@ defmodule LearnElixirGraphql.MixProject do
       {:ecto_shorts, "~> 1.1"},
       {:ex_check, ">= 0.0.0", only: :dev, runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false}
+      {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
+      {:gen_stage, "~> 1.0"}
     ]
   end
 

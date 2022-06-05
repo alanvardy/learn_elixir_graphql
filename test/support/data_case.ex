@@ -23,7 +23,6 @@ defmodule LearnElixirGraphql.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import LearnElixirGraphql.DataCase
-      import LearnElixirGraphql.Helpers
     end
   end
 

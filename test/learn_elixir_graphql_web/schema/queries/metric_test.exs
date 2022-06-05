@@ -1,6 +1,8 @@
 defmodule LearnElixirGraphqlWeb.Schema.Queries.MetricTest do
   use LearnElixirGraphql.DataCase
 
+  alias LearnElixirGraphql.Support.Helpers
+
   @user_doc """
     query findUser($name: String, $email: String) {
       user(name: $name, email: $email) {
@@ -24,14 +26,14 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.MetricTest do
     test "Will record user queries" do
       first_count =
         @resolver_hits_doc
-        |> run_schema(%{"key" => "USER"})
+        |> Helpers.run_schema(%{"key" => "USER"})
         |> get_in(["resolver_hits", "hits"])
 
-      run_schema(@user_doc, %{"name" => "Nancy"})
+      Helpers.run_schema(@user_doc, %{"name" => "Nancy"})
 
       second_count =
         @resolver_hits_doc
-        |> run_schema(%{"key" => "USER"})
+        |> Helpers.run_schema(%{"key" => "USER"})
         |> get_in(["resolver_hits", "hits"])
 
       assert second_count == first_count + 1
@@ -41,7 +43,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.MetricTest do
       [first, second, third] =
         for _num <- 1..3 do
           @resolver_hits_doc
-          |> run_schema(%{"key" => "RESOLVER_HITS"})
+          |> Helpers.run_schema(%{"key" => "RESOLVER_HITS"})
           |> get_in(["resolver_hits", "hits"])
         end
 

@@ -1,6 +1,10 @@
 defmodule LearnElixirGraphqlWeb.Schema.Queries.PreferenceTest do
   use LearnElixirGraphql.DataCase, async: true
 
+  import LearnElixirGraphql.Support.TestSetup
+
+  alias LearnElixirGraphql.Support.Helpers
+
   @preference_doc """
     query findPreference($user_id: ID) {
       preference(user_id: $user_id) {
@@ -11,33 +15,13 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.PreferenceTest do
     }
   """
 
-  @users_params [
-    %{
-      name: "Duke",
-      email: "duke@email.com",
-      preference: %{likes_emails: true, likes_phone_calls: false}
-    },
-    %{
-      name: "Daisy",
-      email: "daisy@email.com",
-      preference: %{likes_emails: false, likes_phone_calls: true}
-    },
-    %{
-      name: "Dingo",
-      email: "dingo@email.com",
-      preference: %{likes_emails: false, likes_phone_calls: false}
-    }
-  ]
-
   describe "@preference" do
-    setup do
-      %{users: create_users(@users_params)}
-    end
+    setup :users
 
     test "Can get the preference by user_id", %{users: users} do
       user = List.first(users)
-      data = schema_success(@preference_doc, %{"user_id" => user.id})
-      assert_comparable(user.preference, data["preference"])
+      data = Helpers.schema_success(@preference_doc, %{"user_id" => user.id})
+      Helpers.assert_comparable(user.preference, data["preference"])
     end
   end
 
@@ -64,19 +48,17 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.PreferenceTest do
   """
 
   describe "@preferences" do
-    setup do
-      %{users: create_users(@users_params)}
-    end
+    setup :users
 
     test "Can get all the preferences", %{users: users} do
-      data = schema_success(@preferences_doc, %{})
+      data = Helpers.schema_success(@preferences_doc, %{})
       result = %{"preferences" => Enum.map(users, fn user -> user.preference end)}
-      assert_comparable(data, result)
+      Helpers.assert_comparable(data, result)
     end
 
     test "Can find the dog" do
       data =
-        schema_success(@preferences_with_users_doc, %{
+        Helpers.schema_success(@preferences_with_users_doc, %{
           "likes_emails" => false,
           "likes_phone_calls" => false
         })
