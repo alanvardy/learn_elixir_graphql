@@ -5,7 +5,7 @@ defmodule LearnElixirGraphqlWeb.Queries.Metric do
 
   object :metric_queries do
     field :resolver_hits, :resolver_hit do
-      arg :key, :string
+      arg :key, :metric_key
       resolve &Resolvers.Metric.find/2
     end
   end

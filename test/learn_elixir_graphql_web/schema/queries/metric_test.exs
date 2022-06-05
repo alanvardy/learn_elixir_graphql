@@ -12,7 +12,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.MetricTest do
   """
 
   @resolver_hits_doc """
-    query resolverHits($key: String) {
+    query resolverHits($key: MetricKey) {
       resolver_hits(key: $key) {
         key,
         hits
@@ -24,14 +24,14 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.MetricTest do
     test "Will record user queries" do
       first_count =
         @resolver_hits_doc
-        |> run_schema(%{"key" => "user"})
+        |> run_schema(%{"key" => "USER"})
         |> get_in(["resolver_hits", "hits"])
 
       run_schema(@user_doc, %{"name" => "Nancy"})
 
       second_count =
         @resolver_hits_doc
-        |> run_schema(%{"key" => "user"})
+        |> run_schema(%{"key" => "USER"})
         |> get_in(["resolver_hits", "hits"])
 
       assert second_count == first_count + 1
@@ -41,7 +41,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.MetricTest do
       [first, second, third] =
         for _num <- 1..3 do
           @resolver_hits_doc
-          |> run_schema(%{"key" => "resolver_hits"})
+          |> run_schema(%{"key" => "RESOLVER_HITS"})
           |> get_in(["resolver_hits", "hits"])
         end
 
