@@ -7,12 +7,12 @@ defmodule LearnElixirGraphql.Metrics.HitTracker do
     Agent.start_link(fn -> %{} end, name: __MODULE__)
   end
 
-  @spec increment(binary) :: :ok
+  @spec increment(String.t()) :: :ok
   def increment(key) do
     Agent.update(__MODULE__, fn state -> Map.update(state, key, 1, &(&1 + 1)) end)
   end
 
-  @spec get(binary) :: non_neg_integer
+  @spec get(String.t()) :: non_neg_integer
   def get(key) do
     Agent.get(__MODULE__, fn state -> Map.get(state, key, 0) end)
   end

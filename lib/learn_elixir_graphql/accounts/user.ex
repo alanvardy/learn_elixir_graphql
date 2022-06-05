@@ -6,8 +6,8 @@ defmodule LearnElixirGraphql.Accounts.User do
 
   @type t :: %__MODULE__{
           id: non_neg_integer | nil,
-          email: binary | nil,
-          name: binary | nil,
+          email: String.t() | nil,
+          name: String.t() | nil,
           preference: Preference.t() | nil
         }
 

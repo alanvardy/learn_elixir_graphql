@@ -6,7 +6,7 @@ defmodule LearnElixirGraphqlWeb.ErrorHelpers do
   @doc """
   Translates an error message using gettext.
   """
-  @spec translate_error({binary, keyword}) :: binary
+  @spec translate_error({String.t(), keyword}) :: String.t()
   def translate_error({msg, opts}) do
     # When using gettext, we typically pass the strings we want
     # to translate as a static argument:
