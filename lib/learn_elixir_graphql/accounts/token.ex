@@ -3,10 +3,11 @@ defmodule LearnElixirGraphql.Accounts.Token do
   use Ecto.Schema
   import Ecto.Changeset
   import Ecto.Query
-  alias LearnElixirGraphql.Accounts.User
 
-  # TODO move to configuration
-  @max_age :timer.hours(24)
+  alias LearnElixirGraphql.Accounts.User
+  alias LearnElixirGraphql.Config
+
+  @max_age Config.token_max_age()
 
   @timestamps_opts type: :utc_datetime_usec
 

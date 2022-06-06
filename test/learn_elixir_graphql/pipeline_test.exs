@@ -4,9 +4,9 @@ defmodule LearnElixirGraphql.PipelineTest do
   import LearnElixirGraphql.Support.TestSetup
 
   alias LearnElixirGraphql.Accounts.Token
+  alias LearnElixirGraphql.Config
 
-  # TODO use config
-  @max_age :timer.hours(26)
+  @max_age Config.token_max_age() + :timer.minutes(1)
   @sleep 100
 
   describe "pipeline" do

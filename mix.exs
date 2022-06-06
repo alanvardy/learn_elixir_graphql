@@ -9,6 +9,13 @@ defmodule LearnElixirGraphql.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
+      preferred_cli_env: [
+        test: :test,
+        check: :test,
+        credo: :test,
+        dialyzer: :test,
+        doctor: :test
+      ],
       dialyzer: dialyzer(),
       deps: deps(),
       aliases: aliases()
@@ -30,7 +37,10 @@ defmodule LearnElixirGraphql.MixProject do
       plt_ignore_apps: [:ecto_shorts],
       ignore_warnings: ".dialyzer-ignore.exs",
       list_unused_filters: true,
-      flags: [:extra_return, :missing_return]
+      flags: [:extra_return, :missing_return],
+      plt_add_apps: [:ex_unit, :mix, :credo],
+      plt_local_path: "dialyzer",
+      plt_core_path: "dialyzer"
     ]
   end
 
@@ -55,9 +65,10 @@ defmodule LearnElixirGraphql.MixProject do
       {:postgrex, "~> 0.15"},
       {:dataloader, "~> 1.0"},
       {:ecto_shorts, "~> 1.1"},
-      {:ex_check, ">= 0.0.0", only: :dev, runtime: false},
+      {:ex_check, ">= 0.0.0", only: :test, runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.1", only: :test, runtime: false},
+      {:doctor, "~> 0.18.0", only: :test},
       {:gen_stage, "~> 1.0"}
     ]
   end

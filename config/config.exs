@@ -22,7 +22,9 @@ config :learn_elixir_graphql, LearnElixirGraphqlWeb.Endpoint,
   pubsub_server: LearnElixirGraphql.PubSub
 
 config :learn_elixir_graphql,
-  ecto_repos: [LearnElixirGraphql.Repo]
+  ecto_repos: [LearnElixirGraphql.Repo],
+  token_max_age: :timer.hours(24),
+  pipeline_recheck_interval: :timer.seconds(30)
 
 config :ecto_shorts,
   repo: LearnElixirGraphql.Repo,

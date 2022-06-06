@@ -12,7 +12,7 @@ config :learn_elixir_graphql, LearnElixirGraphqlWeb.Endpoint,
   check_origin: false,
   watchers: []
 
-config :learn_elixir_graphql, token: "faketoken"
+config :learn_elixir_graphql, token: "faketoken", env: :dev
 
 # ## SSL Support
 #

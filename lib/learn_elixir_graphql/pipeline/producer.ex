@@ -4,10 +4,9 @@ defmodule LearnElixirGraphql.Pipeline.Producer do
   """
   use GenStage
 
-  alias LearnElixirGraphql.Accounts
+  alias LearnElixirGraphql.{Accounts, Config}
 
-  # TODO move to configuration
-  @recheck_interval 50
+  @recheck_interval Config.pipeline_recheck_interval()
 
   def start_link(args) do
     caller = Keyword.fetch!(args, :caller)
