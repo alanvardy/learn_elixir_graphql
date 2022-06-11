@@ -4,28 +4,25 @@ defmodule LearnElixirGraphql.Support.Helpers do
   import ExUnit.Assertions
   alias LearnElixirGraphqlWeb.Schema
 
-  @doc "Run a query and return data"
-  @spec run_schema(String.t(), %{optional(String.t()) => any()}) :: map | nil
-  def run_schema(document, variables) do
-    assert {:ok, %{data: data}} = Absinthe.run(document, Schema, variables: variables)
-    data
-  end
-
   @doc "Run a query against an Absinthe Schema, expecting no errors"
   @spec schema_success(String.t(), %{optional(String.t()) => any()}) :: map | nil
   def schema_success(document, variables) do
     {:ok, result} = Absinthe.run(document, Schema, variables: variables)
     refute Map.get(result, :errors)
-    data = Map.get(result, :data)
-    assert data
-    data
+
+    result
+    |> Map.get(:data)
+    |> tap(&assert/1)
   end
 
   @doc "Run a query against an Absinthe Schema, expecting errors and returning them"
   @spec schema_errors(String.t(), %{optional(String.t()) => any()}) :: [map]
   def schema_errors(document, variables) do
-    assert {:ok, %{errors: errors}} = Absinthe.run(document, Schema, variables: variables)
-    errors
+    {:ok, result} = Absinthe.run(document, Schema, variables: variables)
+
+    result
+    |> Map.get(:errors)
+    |> tap(&assert/1)
   end
 
   @doc """

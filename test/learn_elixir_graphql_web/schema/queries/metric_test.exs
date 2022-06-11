@@ -26,14 +26,14 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.MetricTest do
     test "Will record user queries" do
       first_count =
         @resolver_hits_doc
-        |> Helpers.run_schema(%{"key" => "USER"})
+        |> Helpers.schema_success(%{"key" => "USER"})
         |> get_in(["resolver_hits", "hits"])
 
-      Helpers.run_schema(@user_doc, %{"name" => "Nancy"})
+      Helpers.schema_errors(@user_doc, %{"name" => "Nancy"})
 
       second_count =
         @resolver_hits_doc
-        |> Helpers.run_schema(%{"key" => "USER"})
+        |> Helpers.schema_success(%{"key" => "USER"})
         |> get_in(["resolver_hits", "hits"])
 
       assert second_count == first_count + 1
@@ -43,7 +43,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.MetricTest do
       [first, second, third] =
         for _num <- 1..3 do
           @resolver_hits_doc
-          |> Helpers.run_schema(%{"key" => "RESOLVER_HITS"})
+          |> Helpers.schema_success(%{"key" => "RESOLVER_HITS"})
           |> get_in(["resolver_hits", "hits"])
         end
 
