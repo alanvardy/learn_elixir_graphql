@@ -5,6 +5,8 @@ defmodule LearnElixirGraphql.Accounts do
   alias LearnElixirGraphql.ErrorUtils
   alias LearnElixirGraphql.Repo
 
+  import Ecto.Query
+
   @type params :: map
   @type error :: %{code: atom, message: String.t(), details: map}
   @type changeset :: Ecto.Changeset.t()
@@ -14,6 +16,12 @@ defmodule LearnElixirGraphql.Accounts do
   @spec all_users(params) :: {:ok, [User.t()]}
   def all_users(params) do
     {:ok, Actions.all(User, params)}
+  end
+
+  # TODO fix me
+  @spec all_user_ids :: {:ok, [pos_integer]}
+  def all_user_ids(caller \\ self()) do
+    Actions.all(from(u in User, select: u.id), %{}, caller: caller)
   end
 
   @spec find_user(params) :: {:error, error} | {:ok, User.t()}
@@ -60,44 +68,5 @@ defmodule LearnElixirGraphql.Accounts do
     end
   rescue
     e -> ErrorUtils.internal_server_error_found(e, params)
-  end
-
-  # TOKEN
-
-  @spec find_token(params) :: {:error, error} | {:ok, Token.t()}
-  def find_token(params) do
-    Actions.find(Token, params)
-  rescue
-    e -> ErrorUtils.internal_server_error_found(e, params)
-  end
-
-  @spec update_token(map) :: {:error, error | changeset} | {:ok, Token.t()}
-  def update_token(%{id: id} = params) do
-    with {:ok, auth} <- find_token(%{id: String.to_integer(id)}) do
-      params = Map.delete(params, :id)
-      Actions.update(Token, auth, params)
-    end
-  rescue
-    e -> ErrorUtils.internal_server_error_found(e, params)
-  end
-
-  @spec update_token(pos_integer, map) :: {:error, error | changeset} | {:ok, Token.t()}
-  def update_token(id, updates, caller \\ self()) do
-    Actions.update(Token, id, updates, caller: caller)
-  end
-
-  def all_expired_tokens(limit, caller \\ self()) do
-    limit
-    |> Token.limit()
-    |> Token.where_expired()
-    |> Repo.all(caller: caller)
-  end
-
-  def refresh_token(%Token{id: id}, caller \\ self()) do
-    update_token(id, %{token: generate_token()}, caller)
-  end
-
-  def generate_token do
-    Base.encode32(:crypto.strong_rand_bytes(50), padding: false)
   end
 end

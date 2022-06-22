@@ -9,7 +9,6 @@ defmodule LearnElixirGraphql.Accounts.User do
           email: String.t() | nil,
           name: String.t() | nil,
           preference: Preference.t() | Ecto.Association.NotLoaded.t() | nil,
-          token: Token.t() | Ecto.Association.NotLoaded.t() | nil,
           inserted_at: DateTime.t() | nil,
           updated_at: DateTime.t() | nil
         }
@@ -18,7 +17,6 @@ defmodule LearnElixirGraphql.Accounts.User do
     field :email, :string
     field :name, :string
     has_one :preference, Preference
-    has_one :token, Token
 
     timestamps(type: :utc_datetime_usec)
   end
@@ -37,7 +35,6 @@ defmodule LearnElixirGraphql.Accounts.User do
       name: "users_email_unique_index"
     )
     |> cast_assoc(:preference, with: &Preference.create_changeset/2)
-    |> cast_assoc(:token, with: &Token.create_changeset/2)
   end
 
   @spec changeset(t, map) :: Ecto.Changeset.t()

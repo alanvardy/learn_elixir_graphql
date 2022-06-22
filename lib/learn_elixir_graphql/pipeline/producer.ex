@@ -17,31 +17,28 @@ defmodule LearnElixirGraphql.Pipeline.Producer do
   def init(args) do
     caller = Keyword.fetch!(args, :caller)
     Process.send_after(self(), :recheck, @recheck_interval)
-    {:producer, %{demand: 0, caller: caller}}
+    {:producer, %{demand: 0, caller: caller, user_ids: []}}
   end
 
   @impl GenStage
   def handle_demand(demand, state) when demand > 0 do
-    fetch_and_return_tokens(demand, state)
+    return_user_ids(demand, state)
   end
 
   @impl GenStage
-  def handle_info(:recheck, state) do
+  def handle_info(:recheck, %{caller: caller} = state) do
     Process.send_after(self(), :recheck, @recheck_interval)
 
-    fetch_and_return_tokens(0, state)
+    state = Map.put(state, :user_ids, Accounts.all_user_ids(caller))
+
+    return_user_ids(0, state)
   end
 
-  defp fetch_and_return_tokens(demand, %{demand: previous_demand, caller: caller}) do
-    demand = demand + previous_demand
+  defp return_user_ids(demand, %{user_ids: user_ids, demand: prev_demand, caller: caller}) do
+    demand = demand + prev_demand
+    {user_ids_for_consumers, user_ids} = Enum.split(user_ids, demand)
+    new_demand = demand - Enum.count(user_ids_for_consumers)
 
-    token_tuples =
-      demand
-      |> Accounts.all_expired_tokens(caller)
-      |> Enum.map(&{&1, caller})
-
-    new_demand = demand - Enum.count(token_tuples)
-
-    {:noreply, token_tuples, %{demand: new_demand, caller: caller}}
+    {:noreply, user_ids_for_consumers, %{demand: new_demand, caller: caller, user_ids: user_ids}}
   end
 end

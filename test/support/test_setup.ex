@@ -6,8 +6,7 @@ defmodule LearnElixirGraphql.Support.TestSetup do
   @user_params %{
     "name" => "Duffy",
     "email" => "duffy@email.com",
-    "preference" => %{"likes_emails" => true, "likes_phone_calls" => true},
-    "token" => %{"token" => "ABCD"}
+    "preference" => %{"likes_emails" => true, "likes_phone_calls" => true}
   }
 
   @users_params [
@@ -15,19 +14,16 @@ defmodule LearnElixirGraphql.Support.TestSetup do
       name: "Duke",
       email: "duke@email.com",
       preference: %{likes_emails: true, likes_phone_calls: false},
-      token: %{token: "ABCD"}
     },
     %{
       name: "Daisy",
       email: "daisy@email.com",
       preference: %{likes_emails: false, likes_phone_calls: true},
-      token: %{token: "ABCD"}
     },
     %{
       name: "Dingo",
       email: "dingo@email.com",
       preference: %{likes_emails: false, likes_phone_calls: false},
-      token: %{token: "ABCD"}
     }
   ]
 

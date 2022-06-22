@@ -17,7 +17,8 @@ defmodule LearnElixirGraphql.Application do
         {Phoenix.PubSub, [name: LearnElixirGraphql.PubSub, adapter: Phoenix.PubSub.PG2]},
         LearnElixirGraphqlWeb.Endpoint,
         {Absinthe.Subscription, [LearnElixirGraphqlWeb.Endpoint]},
-        {LearnElixirGraphql.Repo, []}
+        {LearnElixirGraphql.Repo, []},
+        LearnElixirGraphql.TokenCache
 
         # Starts a worker by calling: LearnElixirGraphql.Worker.start_link(arg)
         # {LearnElixirGraphql.Worker, arg},
