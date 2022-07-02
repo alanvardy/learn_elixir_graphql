@@ -31,6 +31,10 @@ defmodule LearnElixirGraphql.Metrics.HitTracker do
     :users
   ]
 
+  @doc """
+  Creates a new counter the size of the list of counters
+  Stores the reference in persistent term
+  """
   @spec start :: :ok
   def start do
     @keys
@@ -39,6 +43,7 @@ defmodule LearnElixirGraphql.Metrics.HitTracker do
     |> then(&:persistent_term.put(@name, &1))
   end
 
+  @doc "Increment a key by 1"
   @spec increment(key) :: :ok
   def increment(key) when key in @keys do
     index = get_index(key)
@@ -48,6 +53,7 @@ defmodule LearnElixirGraphql.Metrics.HitTracker do
     |> :counters.add(index, 1)
   end
 
+  @doc "Get the value of a key"
   @spec get(key) :: non_neg_integer
   def get(key) when key in @keys do
     index = get_index(key)
@@ -57,6 +63,8 @@ defmodule LearnElixirGraphql.Metrics.HitTracker do
     |> :counters.get(index)
   end
 
+  @doc false
+  @spec keys :: [key]
   def keys, do: @keys
 
   defp get_index(key), do: Enum.find_index(@keys, &(&1 === key)) + 1

@@ -1,5 +1,4 @@
 # credo:disable-for-this-file Credo.Check.Readability.Specs
-
 defmodule LearnElixirGraphqlWeb.Schema do
   @moduledoc "Main schema for Absinthe"
   use Absinthe.Schema

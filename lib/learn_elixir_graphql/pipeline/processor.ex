@@ -6,8 +6,10 @@ defmodule LearnElixirGraphql.Pipeline.Processor do
   alias LearnElixirGraphql.{Config, TokenCache}
 
   # One hour before expiry
-  @max_age Config.token_max_age() - 60000
+  @max_age Config.token_max_age() - 60_000
 
+  @doc "Checks a users token and recreates if expired or does not exist"
+  @spec start_link(pos_integer) :: {:ok, pid}
   def start_link(user_id) do
     # Note: this function must return the format of `{:ok, pid}` and like
     # all children started by a Supervisor, the process must be linked

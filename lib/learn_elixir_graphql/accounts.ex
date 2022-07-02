@@ -1,11 +1,8 @@
 defmodule LearnElixirGraphql.Accounts do
   @moduledoc "The Accounts context, including Users and Preferences"
   alias EctoShorts.Actions
-  alias LearnElixirGraphql.Accounts.{Preference, Token, User}
+  alias LearnElixirGraphql.Accounts.{Preference, User}
   alias LearnElixirGraphql.ErrorUtils
-  alias LearnElixirGraphql.Repo
-
-  import Ecto.Query
 
   @type params :: map
   @type error :: %{code: atom, message: String.t(), details: map}
@@ -18,10 +15,10 @@ defmodule LearnElixirGraphql.Accounts do
     {:ok, Actions.all(User, params)}
   end
 
-  # TODO fix me
   @spec all_user_ids :: {:ok, [pos_integer]}
+  @spec all_user_ids(pid) :: {:ok, [pos_integer]}
   def all_user_ids(caller \\ self()) do
-    Actions.all(from(u in User, select: u.id), %{}, caller: caller)
+    Actions.all(User.select_id(), %{}, caller: caller)
   end
 
   @spec find_user(params) :: {:error, error} | {:ok, User.t()}

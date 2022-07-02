@@ -2,7 +2,8 @@ defmodule LearnElixirGraphql.Accounts.User do
   @moduledoc "User schema"
   use Ecto.Schema
   import Ecto.Changeset
-  alias LearnElixirGraphql.Accounts.{Preference, Token}
+  import Ecto.Query
+  alias LearnElixirGraphql.Accounts.Preference
 
   @type t :: %__MODULE__{
           id: pos_integer | nil,
@@ -42,5 +43,10 @@ defmodule LearnElixirGraphql.Accounts.User do
     user
     |> cast(attrs, @cast)
     |> validate_required(@cast)
+  end
+
+  @spec select_id(Ecto.Queryable.t()) :: Ecto.Query.t()
+  def select_id(query \\ __MODULE__) do
+    select(query, [u], u.id)
   end
 end
