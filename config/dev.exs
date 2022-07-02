@@ -5,8 +5,10 @@ import Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
+port = System.get_env("PORT") || "4000"
+
 config :learn_elixir_graphql, LearnElixirGraphqlWeb.Endpoint,
-  http: [port: 4000],
+  http: [port: String.to_integer(port)],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,

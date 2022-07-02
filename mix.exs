@@ -70,7 +70,8 @@ defmodule LearnElixirGraphql.MixProject do
       {:blitz_credo_checks, "~> 0.1", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.1", only: :test, runtime: false},
       {:doctor, "~> 0.18.0", only: :test},
-      {:gen_stage, "~> 1.0"}
+      {:gen_stage, "~> 1.0"},
+      {:libcluster, "~> 3.3"}
     ]
   end
 

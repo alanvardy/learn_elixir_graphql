@@ -8,7 +8,7 @@ defmodule LearnElixirGraphqlWeb.Resolvers.Metric do
   @spec find(params, any) :: {:ok, map}
   def find(%{key: key}, _) do
     Metrics.register_resolver_hit(:resolver_hits)
-    hits = Metrics.get_resolver_hits(key)
+    hits = Metrics.get_cluster_resolver_hits(key)
     {:ok, %{key: key, hits: hits}}
   end
 end

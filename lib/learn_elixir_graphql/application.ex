@@ -10,9 +10,17 @@ defmodule LearnElixirGraphql.Application do
   @spec start(any, any) :: {:error, any} | {:ok, pid}
   def start(_type, _args) do
     HitTracker.start()
-    # List all child processes to be supervised
+
+    topologies = [
+      example: [
+        strategy: Cluster.Strategy.Epmd,
+        config: [hosts: [:node_a@localhost, :node_b@localhost]]
+      ]
+    ]
+
     children =
       [
+        {Cluster.Supervisor, [topologies, [name: LearnElixirGraphql.ClusterSupervisor]]},
         # Start the endpoint when the application starts
         {Phoenix.PubSub, [name: LearnElixirGraphql.PubSub, adapter: Phoenix.PubSub.PG2]},
         LearnElixirGraphqlWeb.Endpoint,
