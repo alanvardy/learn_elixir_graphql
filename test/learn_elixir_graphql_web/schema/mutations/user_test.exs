@@ -19,7 +19,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
 
   describe "@create_user" do
     test "creates a user" do
-      {:ok, users} = Accounts.all_users(%{})
+      users = Accounts.all_users(%{})
       assert Enum.empty?(users)
 
       Helpers.schema_success(@create_user_doc, %{
@@ -28,7 +28,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
         "token" => "faketoken"
       })
 
-      {:ok, users} = Accounts.all_users(%{})
+      users = Accounts.all_users(%{})
       assert Enum.count(users) == 1
       assert List.first(users).name == "Bobby"
     end
@@ -40,7 +40,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
         "token" => "faketoken"
       })
 
-      {:ok, users} = Accounts.all_users(%{})
+      users = Accounts.all_users(%{})
       assert Enum.count(users) == 1
       assert List.first(users).name == "Bobby"
 

@@ -10,7 +10,8 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
       user(name: $name, email: $email) {
         id,
         name,
-        email
+        email,
+        auth_token
       }
     }
   """
@@ -47,7 +48,8 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
       users(name: $name, first: $first) {
         id,
         name,
-        email
+        email,
+        auth_token
       }
     }
   """

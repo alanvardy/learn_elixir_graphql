@@ -57,13 +57,13 @@ defmodule LearnElixirGraphql.TokenCache do
   end
 
   @doc "Create a token and put into cache"
-  @spec set_token(id) :: :ok
-  @spec set_token(id, token) :: :ok
-  @spec set_token(id, token, DateTime.t()) :: :ok
+  @spec set_token(id) :: String.t()
+  @spec set_token(id, token) :: String.t()
+  @spec set_token(id, token, DateTime.t()) :: String.t()
   def set_token(user_id, token \\ generate_token(), datetime \\ DateTime.utc_now()) do
     :ets.insert(@cache_name, {user_id, {token, datetime}})
 
-    :ok
+    token
   end
 
   @doc "Generate a random string"

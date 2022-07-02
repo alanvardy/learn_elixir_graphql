@@ -14,8 +14,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Middleware.ChangesetErrorsTest do
 
   describe "@create_user" do
     test "can handle changeset errors" do
-      {:ok, users} = Accounts.all_users(%{})
-      assert Enum.empty?(users)
+      assert [] = Accounts.all_users(%{})
 
       assert [%{message: "email: can't be blank", path: ["create_user"]}] =
                Helpers.schema_errors(@create_user_doc, %{

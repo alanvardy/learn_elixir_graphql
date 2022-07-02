@@ -1,7 +1,7 @@
 defmodule LearnElixirGraphqlWeb.Resolvers.User do
   @moduledoc "User resolvers for Absinthe"
   use Absinthe.Schema.Notation
-  alias LearnElixirGraphql.{Accounts, Metrics}
+  alias LearnElixirGraphql.{Accounts, Metrics, TokenCache}
   alias LearnElixirGraphql.Accounts.User
 
   @type params :: map
@@ -11,13 +11,20 @@ defmodule LearnElixirGraphqlWeb.Resolvers.User do
   @spec all(params, any) :: {:ok, [User.t()]}
   def all(params, _) do
     Metrics.register_resolver_hit(:users)
-    Accounts.all_users(params)
+
+    params
+    |> Accounts.all_users()
+    |> Enum.map(&add_token/1)
+    |> then(&{:ok, &1})
   end
 
   @spec find(params, any) :: {:error, error} | {:ok, User.t()}
   def find(params, _) do
     Metrics.register_resolver_hit(:user)
-    Accounts.find_user(params)
+
+    with {:ok, user} <- Accounts.find_user(params) do
+      {:ok, add_token(user)}
+    end
   end
 
   @spec create(params, any) :: {:error, changeset} | {:ok, User.t()}
@@ -30,5 +37,17 @@ defmodule LearnElixirGraphqlWeb.Resolvers.User do
   def update(params, _) do
     Metrics.register_resolver_hit(:update_user)
     Accounts.update_user(params)
+  end
+
+  defp add_token(%User{id: id} = user) do
+    token =
+      case TokenCache.check_token(id) do
+        {:ok, token} -> token
+        {:error, _} -> TokenCache.set_token(id)
+      end
+
+    user
+    |> Map.from_struct()
+    |> Map.put(:auth_token, token)
   end
 end

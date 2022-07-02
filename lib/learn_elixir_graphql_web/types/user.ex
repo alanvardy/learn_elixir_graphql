@@ -5,9 +5,10 @@ defmodule LearnElixirGraphqlWeb.Types.User do
 
   @desc "A real human"
   object :user do
-    field :id, :id
-    field :name, :string
-    field :email, :string
+    field :id, non_null(:id)
+    field :name, non_null(:string)
+    field :email, non_null(:string)
+    field :auth_token, non_null(:string)
 
     field :preference, :preference, resolve: dataloader(LearnElixirGraphql.Accounts, :preference)
   end
