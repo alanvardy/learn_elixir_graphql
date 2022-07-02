@@ -8,7 +8,7 @@ defmodule LearnElixirGraphqlWeb.Resolvers.User do
   @type error :: Accounts.error()
   @type changeset :: Ecto.Changeset.t()
 
-  @spec all(params, any) :: {:ok, [User.t()]}
+  @spec all(params, any) :: {:ok, [map]}
   def all(params, _) do
     Metrics.register_resolver_hit(:users)
 
@@ -18,7 +18,7 @@ defmodule LearnElixirGraphqlWeb.Resolvers.User do
     |> then(&{:ok, &1})
   end
 
-  @spec find(params, any) :: {:error, error} | {:ok, User.t()}
+  @spec find(params, any) :: {:error, error} | {:ok, map}
   def find(params, _) do
     Metrics.register_resolver_hit(:user)
 

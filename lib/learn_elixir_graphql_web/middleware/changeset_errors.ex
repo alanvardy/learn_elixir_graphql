@@ -1,5 +1,5 @@
-defmodule LearnElixirGraphqlWeb.Middleware.ChangesetErrors do
-  @moduledoc "Converts changeset errors into Absinthe errors"
+defmodule LearnElixirGraphqlWeb.Middleware.Errors do
+  @moduledoc "Converts Changeset and ErrorMessage errors into Absinthe errors"
   alias LearnElixirGraphql.ErrorUtils
 
   @behaviour Absinthe.Middleware
@@ -13,6 +13,8 @@ defmodule LearnElixirGraphqlWeb.Middleware.ChangesetErrors do
     |> Ecto.Changeset.traverse_errors(fn {err, _opts} -> err end)
     |> Enum.map(&error_to_string(&1, data))
   end
+
+  defp handle_error(%ErrorMessage{} = error), do: [Map.from_struct(error)]
 
   defp handle_error(error), do: [error]
 
