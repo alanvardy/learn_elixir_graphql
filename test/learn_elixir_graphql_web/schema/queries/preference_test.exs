@@ -1,7 +1,7 @@
 defmodule LearnElixirGraphqlWeb.Schema.Queries.PreferenceTest do
   use LearnElixirGraphql.DataCase, async: true
 
-  import LearnElixirGraphql.Support.TestSetup
+  import LearnElixirGraphql.Support.TestSetup, only: [users: 1]
 
   alias LearnElixirGraphql.Support.Helpers
 
@@ -18,7 +18,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.PreferenceTest do
   describe "@preference" do
     setup :users
 
-    test "Can get the preference by user_id", %{users: users} do
+    test "can get the preference by user_id", %{users: users} do
       user = List.first(users)
       data = Helpers.schema_success(@preference_doc, %{"user_id" => user.id})
       Helpers.assert_comparable(user.preference, data["preference"])
@@ -50,13 +50,13 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.PreferenceTest do
   describe "@preferences" do
     setup :users
 
-    test "Can get all the preferences", %{users: users} do
+    test "can get all the preferences", %{users: users} do
       data = Helpers.schema_success(@preferences_doc, %{})
       result = %{"preferences" => Enum.map(users, fn user -> user.preference end)}
       Helpers.assert_comparable(data, result)
     end
 
-    test "Can find the dog" do
+    test "can find the dog" do
       data =
         Helpers.schema_success(@preferences_with_users_doc, %{
           "likes_emails" => false,

@@ -4,15 +4,15 @@ defmodule LearnElixirGraphqlWeb.Schema do
   use Absinthe.Schema
   alias LearnElixirGraphqlWeb.Middleware.{Auth, Errors}
 
-  import_types(LearnElixirGraphqlWeb.Types.User)
-  import_types(LearnElixirGraphqlWeb.Types.Preference)
-  import_types(LearnElixirGraphqlWeb.Types.Metric)
-  import_types(LearnElixirGraphqlWeb.Queries.User)
-  import_types(LearnElixirGraphqlWeb.Queries.Preference)
-  import_types(LearnElixirGraphqlWeb.Queries.Metric)
-  import_types(LearnElixirGraphqlWeb.Mutations.User)
-  import_types(LearnElixirGraphqlWeb.Mutations.Preference)
-  import_types(LearnElixirGraphqlWeb.Subscriptions.Preference)
+  import_types LearnElixirGraphqlWeb.Types.User
+  import_types LearnElixirGraphqlWeb.Types.Preference
+  import_types LearnElixirGraphqlWeb.Types.Metric
+  import_types LearnElixirGraphqlWeb.Queries.User
+  import_types LearnElixirGraphqlWeb.Queries.Preference
+  import_types LearnElixirGraphqlWeb.Queries.Metric
+  import_types LearnElixirGraphqlWeb.Mutations.User
+  import_types LearnElixirGraphqlWeb.Mutations.Preference
+  import_types LearnElixirGraphqlWeb.Subscriptions.Preference
 
   query do
     import_fields :user_queries

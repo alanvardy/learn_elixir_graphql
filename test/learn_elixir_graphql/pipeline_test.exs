@@ -1,7 +1,7 @@
 defmodule LearnElixirGraphql.PipelineTest do
   use LearnElixirGraphql.DataCase, async: true
 
-  import LearnElixirGraphql.Support.TestSetup
+  import LearnElixirGraphql.Support.TestSetup, only: [user: 1]
 
   alias LearnElixirGraphql.{Config, TokenCache}
 

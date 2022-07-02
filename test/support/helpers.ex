@@ -32,7 +32,7 @@ defmodule LearnElixirGraphql.Support.Helpers do
   """
   @spec assert_comparable(map, map) :: true
   def assert_comparable(left, right) do
-    assert convert(left) == convert(right)
+    assert convert(left) === convert(right)
   end
 
   @bad_keys ["__meta__", "id", "user", "user_id", "inserted_at", "updated_at"]
@@ -45,9 +45,9 @@ defmodule LearnElixirGraphql.Support.Helpers do
 
   defp convert(map) when is_map(map) do
     map
-    |> Enum.map(fn field -> string_keys(field) end)
-    |> Enum.map(fn field -> map_or_list_values(field) end)
-    |> Enum.reject(fn {key, _v} -> key in @bad_keys end)
+    |> Stream.map(fn field -> string_keys(field) end)
+    |> Stream.map(fn field -> map_or_list_values(field) end)
+    |> Stream.reject(fn {key, _v} -> key in @bad_keys end)
     |> Enum.into(%{})
   end
 

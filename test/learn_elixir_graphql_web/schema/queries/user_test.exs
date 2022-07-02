@@ -1,7 +1,7 @@
 defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
   use LearnElixirGraphql.DataCase, async: true
 
-  import LearnElixirGraphql.Support.TestSetup
+  import LearnElixirGraphql.Support.TestSetup, only: [users: 1]
 
   alias LearnElixirGraphql.Support.Helpers
 
@@ -19,8 +19,8 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
   describe "@user" do
     setup :users
 
-    test "Can get the user by name", %{users: users} do
-      user = Enum.find(users, fn user -> user.name == "Daisy" end)
+    test "can get the user by name", %{users: users} do
+      user = Enum.find(users, fn user -> user.name === "Daisy" end)
 
       user_id =
         @user_doc
@@ -31,7 +31,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
       assert user_id === user.id
     end
 
-    test "Returns an error if cannot find user" do
+    test "returns an error if cannot find user" do
       assert [
                %{
                  code: :not_found,
@@ -57,20 +57,20 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
   describe "@users" do
     setup :users
 
-    test "Can get all the users", %{users: users} do
+    test "can get all the users", %{users: users} do
       queried_users =
         @users_doc
         |> Helpers.schema_success(%{})
         |> Map.get("users")
 
-      assert Enum.count(queried_users) == 3
+      assert Enum.count(queried_users) === 3
 
       user_ids = Enum.map(queried_users, fn user -> String.to_integer(user["id"]) end)
 
       assert user_ids === Enum.map(users, fn user -> user.id end)
     end
 
-    test "Can get the first 2 users", %{users: users} do
+    test "can get the first 2 users", %{users: users} do
       queried_user_ids =
         @users_doc
         |> Helpers.schema_success(%{"first" => 2})
@@ -81,14 +81,14 @@ defmodule LearnElixirGraphqlWeb.Schema.Queries.UserTest do
       assert user_ids === queried_user_ids
     end
 
-    test "Can get a user by name", %{users: users} do
+    test "can get a user by name", %{users: users} do
       queried_user_ids =
         @users_doc
         |> Helpers.schema_success(%{"name" => "Duke"})
         |> Map.get("users")
         |> Enum.map(fn user -> String.to_integer(user["id"]) end)
 
-      user_id = users |> Enum.find(fn user -> user.name == "Duke" end) |> Map.get(:id)
+      user_id = users |> Enum.find(fn user -> user.name === "Duke" end) |> Map.get(:id)
       assert [user_id] === queried_user_ids
     end
   end

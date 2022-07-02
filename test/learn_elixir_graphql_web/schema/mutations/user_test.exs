@@ -1,7 +1,7 @@
 defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
   use LearnElixirGraphql.DataCase, async: true
 
-  import LearnElixirGraphql.Support.TestSetup
+  import LearnElixirGraphql.Support.TestSetup, only: [user: 1]
 
   alias LearnElixirGraphql.Accounts
   alias LearnElixirGraphql.Support.Helpers
@@ -29,8 +29,8 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
       })
 
       users = Accounts.all_users(%{})
-      assert Enum.count(users) == 1
-      assert List.first(users).name == "Bobby"
+      assert Enum.count(users) === 1
+      assert List.first(users).name === "Bobby"
     end
 
     test "cannot insert the same email address twice" do
@@ -41,8 +41,8 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
       })
 
       users = Accounts.all_users(%{})
-      assert Enum.count(users) == 1
-      assert List.first(users).name == "Bobby"
+      assert Enum.count(users) === 1
+      assert List.first(users).name === "Bobby"
 
       assert [%{details: %{code: :conflict, params: %{key: :email}}}] =
                Helpers.schema_errors(@create_user_doc, %{
@@ -51,7 +51,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
                  "token" => "faketoken"
                })
 
-      assert Enum.count(users) == 1
+      assert Enum.count(users) === 1
     end
 
     test "returns an internal server error" do
@@ -86,7 +86,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
       })
 
       {:ok, user} = Accounts.find_user(%{"id" => to_string(user.id)})
-      assert user.name == "Buffy"
+      assert user.name === "Buffy"
     end
   end
 
@@ -105,8 +105,8 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
 
     test "updates a user preference based on the user_id", %{user: user} do
       {:ok, preference} = Accounts.find_preference(%{"user_id" => to_string(user.id)})
-      assert preference.likes_emails == true
-      assert preference.likes_phone_calls == true
+      assert preference.likes_emails === true
+      assert preference.likes_phone_calls === true
 
       Helpers.schema_success(@update_user_preferences_doc, %{
         "user_id" => user.id,
@@ -116,8 +116,8 @@ defmodule LearnElixirGraphqlWeb.Schema.Mutations.UserTest do
       })
 
       {:ok, preference} = Accounts.find_preference(%{"user_id" => to_string(user.id)})
-      assert preference.likes_emails == false
-      assert preference.likes_phone_calls == false
+      assert preference.likes_emails === false
+      assert preference.likes_phone_calls === false
     end
   end
 end

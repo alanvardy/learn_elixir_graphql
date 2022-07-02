@@ -22,7 +22,6 @@ defmodule LearnElixirGraphqlWeb do
       use Phoenix.Controller, namespace: LearnElixirGraphqlWeb
 
       import Plug.Conn
-      import LearnElixirGraphqlWeb.Gettext
       alias LearnElixirGraphqlWeb.Router.Helpers, as: Routes
     end
   end
@@ -36,8 +35,6 @@ defmodule LearnElixirGraphqlWeb do
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 1, get_flash: 2, view_module: 1]
 
-      import LearnElixirGraphqlWeb.ErrorHelpers
-      import LearnElixirGraphqlWeb.Gettext
       alias LearnElixirGraphqlWeb.Router.Helpers, as: Routes
     end
   end
@@ -53,7 +50,6 @@ defmodule LearnElixirGraphqlWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import LearnElixirGraphqlWeb.Gettext
     end
   end
 

@@ -30,7 +30,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Subscriptions.PreferenceTest do
   }
 
   describe "@updated_user_preferences" do
-    test "Sends the updated preferences when update_user_preferences mutation is triggered", %{
+    test "sends the updated preferences when update_user_preferences mutation is triggered", %{
       socket: socket
     } do
       {:ok, user} = Accounts.create_user(@user_params)

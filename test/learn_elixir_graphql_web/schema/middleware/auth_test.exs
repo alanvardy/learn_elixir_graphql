@@ -13,7 +13,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Middleware.AuthTest do
   """
 
   describe "@create_user" do
-    test "Cannot create a user when no token is provided" do
+    test "cannot create a user when no token is provided" do
       assert [] = Accounts.all_users(%{})
 
       [%{message: "In argument \"token\": Expected type \"String!\", found null."}, _] =
@@ -22,7 +22,7 @@ defmodule LearnElixirGraphqlWeb.Schema.Middleware.AuthTest do
       assert [] = Accounts.all_users(%{})
     end
 
-    test "Cannot create a user when wrong token is provided" do
+    test "cannot create a user when wrong token is provided" do
       assert [] = Accounts.all_users(%{})
 
       [%{message: "invalid_token", path: ["create_user"]}] =
