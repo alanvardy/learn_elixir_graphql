@@ -10,7 +10,7 @@ defmodule LearnElixirGraphql.Accounts do
 
   # USERS
 
-  @spec all_users(params) :: {:ok, [User.t()]}
+  @spec all_users(params) :: [User.t()]
   def all_users(params) do
     Actions.all(User, params)
   end

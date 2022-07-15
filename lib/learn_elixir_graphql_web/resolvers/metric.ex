@@ -4,8 +4,9 @@ defmodule LearnElixirGraphqlWeb.Resolvers.Metric do
   alias LearnElixirGraphql.Metrics
 
   @type params :: map
+  @type resolution :: Absinthe.Resolution.t()
 
-  @spec find(params, any) :: {:ok, map}
+  @spec find(params, resolution) :: {:ok, map}
   def find(%{key: key}, _) do
     Metrics.register_resolver_hit(:resolver_hits)
     hits = Metrics.get_cluster_resolver_hits(key)
