@@ -12,7 +12,7 @@ defmodule LearnElixirGraphql.PipelineTest do
     setup :user
 
     test "updates user token when expired", %{user: user} do
-      TokenCache.set_token(
+      TokenCache.set_cluster_tokens(
         user.id,
         "OLDTOKEN",
         DateTime.add(DateTime.utc_now(), -@max_age, :millisecond)
@@ -29,7 +29,7 @@ defmodule LearnElixirGraphql.PipelineTest do
     end
 
     test "does not update token when not expired", %{user: user} do
-      TokenCache.set_token(
+      TokenCache.set_cluster_tokens(
         user.id,
         "OLDTOKEN"
       )

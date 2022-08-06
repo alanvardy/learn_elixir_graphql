@@ -56,6 +56,16 @@ defmodule LearnElixirGraphql.TokenCache do
     _ -> {:error, :not_found}
   end
 
+  @doc "Create a token and put into cache across all nodes"
+  @spec set_cluster_tokens(id) :: String.t()
+  @spec set_cluster_tokens(id, token) :: String.t()
+  @spec set_cluster_tokens(id, token, DateTime.t()) :: String.t()
+  def set_cluster_tokens(user_id, token \\ generate_token(), datetime \\ DateTime.utc_now()) do
+    {[token | _], _bad_nodes} = :rpc.multicall(__MODULE__, :set_token, [user_id, token, datetime])
+
+    token
+  end
+
   @doc "Create a token and put into cache"
   @spec set_token(id) :: String.t()
   @spec set_token(id, token) :: String.t()

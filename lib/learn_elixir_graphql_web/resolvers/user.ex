@@ -41,7 +41,7 @@ defmodule LearnElixirGraphqlWeb.Resolvers.User do
   @spec find_auth_token(User.t(), params, resolution) :: {:ok, token}
   def find_auth_token(%User{id: id}, _, _res) do
     with {:error, _} <- TokenCache.check_token(id) do
-      {:ok, TokenCache.set_token(id)}
+      {:ok, TokenCache.set_cluster_tokens(id)}
     end
   end
 end
